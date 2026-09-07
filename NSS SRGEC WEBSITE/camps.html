@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="National Integration Camps, Youth Festivals, and Blood Donation Service Camps by SRGEC NSS Volunteers.">
+  <title>NSS Camps & Representation | SRGEC NSS</title>
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="camps.html">
+  <div class="loader"><div class="loader-mark" aria-label="Loading"></div></div>
+
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html">
+        <img src="images/nss_logo.png" alt="NSS Logo" class="logo-img">
+        <div class="brand-text">
+          <strong>SRGEC NSS</strong>
+          <span>Not Me But You</span>
+        </div>
+      </a>
+      <nav class="nav-links" data-nav aria-label="Main navigation"></nav>
+      <div class="nav-actions">
+        <button class="icon-btn" data-theme-toggle aria-label="Toggle theme">&#9680;</button>
+        <button class="menu-toggle" data-menu-toggle aria-label="Open menu">&#9776;</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section alt">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">National & State Level</span>
+          <h1 class="section-title">NSS Camps & Youth Festivals</h1>
+          <p class="section-desc">Students selected by the NSS Programme Officer represent Andhra Pradesh and university cells in national leadership camps organized by the Ministry of Youth Affairs and Sports.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Camps Grid -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Camp Records</span>
+          <h2>Special & National Camps</h2>
+        </div>
+        <div class="grid cols-3" data-camps></div>
+      </div>
+    </section>
+
+    <!-- Dedicated Blood Donation Camps Highlight Section -->
+    <section class="section" id="blood-camps">
+      <div class="container">
+        <div class="card reveal" style="padding: 32px; border-color: var(--orange-glow); background: linear-gradient(135deg, var(--surface), var(--bg-alt));">
+          <span class="eyebrow" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">Life Saving Drive</span>
+          <h2 style="font-size: 1.8rem; margin: 10px 0;">Blood Donation Camps & Medical Help</h2>
+          <p style="color: var(--muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 20px;">
+            The SRGEC NSS Unit conducts regular campus blood donation drives in collaboration with Government Blood Banks, Red Cross Society, and District Health Authorities. Hundreds of units of blood are donated annually by student volunteers to support emergency hospital needs in Krishna District.
+          </p>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <a href="contact.html#join" class="btn orange">Register as Blood Donor Volunteer &rarr;</a>
+            <a href="activities.html" class="btn ghost">View Past Blood Donation Records</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Selected Students Compact Portfolio -->
+    <section class="section alt">
+      <div class="container">
+        <div class="section-head center reveal">
+          <span class="eyebrow">Student Representatives</span>
+          <h2 class="section-title">Selected Student Volunteers</h2>
+          <p class="section-desc">Click on any volunteer card to view full camp representation details.</p>
+        </div>
+
+        <div class="grid cols-4" data-selected-students></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <strong>SRGEC NSS Unit</strong>
+        <p>"NOT ME BUT YOU"</p>
+        <p style="font-size: 0.88rem; color: var(--muted); margin-top: 10px;">Seshadri Rao Gudlavalleru Engineering College, Gudlavalleru, Krishna District, AP.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="activities.html">Activities</a></li>
+          <li><a href="core-team.html">Core Team</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>NSS Office</h4>
+        <p style="color: var(--muted); font-size: 0.9rem;">Email: srgecnss@gmail.com</p>
+        <p style="color: var(--muted); font-size: 0.9rem; margin-top: 6px;">Location: SRGEC Campus, Gudlavalleru</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span data-year>2026</span> SRGEC National Service Scheme. All Rights Reserved.
+    </div>
+  </footer>
+
+  <!-- Firebase App & Firestore SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

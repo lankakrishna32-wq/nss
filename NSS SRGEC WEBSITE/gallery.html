@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Photo and Video Gallery of SRGEC NSS drives, camps, rallies, and band performances.">
+  <title>Gallery | SRGEC NSS</title>
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="gallery.html">
+  <div class="loader"><div class="loader-mark" aria-label="Loading"></div></div>
+
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html">
+        <img src="images/nss_logo.png" alt="NSS Logo" class="logo-img">
+        <div class="brand-text">
+          <strong>SRGEC NSS</strong>
+          <span>Not Me But You</span>
+        </div>
+      </a>
+      <nav class="nav-links" data-nav aria-label="Main navigation"></nav>
+      <div class="nav-actions">
+        <button class="icon-btn" data-theme-toggle aria-label="Toggle theme">&#9680;</button>
+        <button class="menu-toggle" data-menu-toggle aria-label="Open menu">&#9776;</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section alt">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">Visual Archive</span>
+          <h1 class="section-title">Photo & Media Gallery</h1>
+          <p class="section-desc">Event-wise albums, national camp moments, band performances, and volunteer drives.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="filters-bar reveal">
+          <select class="select-filter" data-album-filter><option value="">All Albums</option></select>
+          <select class="select-filter" data-gallery-year-filter><option value="">All Years</option></select>
+          <select class="select-filter" data-type-filter>
+            <option value="">All Media Types</option>
+            <option value="Photo">Photos</option>
+            <option value="Video">Videos</option>
+          </select>
+        </div>
+
+        <div class="gallery-grid" data-gallery></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <strong>SRGEC NSS Unit</strong>
+        <p>"NOT ME BUT YOU"</p>
+        <p style="font-size: 0.88rem; color: var(--muted); margin-top: 10px;">Seshadri Rao Gudlavalleru Engineering College, Gudlavalleru, AP.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="activities.html">Activities</a></li>
+          <li><a href="camps.html">Camps</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>NSS Office</h4>
+        <p style="color: var(--muted); font-size: 0.9rem;">Email: nss@srgec.ac.in</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span data-year>2026</span> SRGEC National Service Scheme. All Rights Reserved.
+    </div>
+  </footer>
+
+  <!-- Firebase App & Firestore SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

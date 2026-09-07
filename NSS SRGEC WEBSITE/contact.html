@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Contact SRGEC NSS Programme Office or Register as a Volunteer.">
+  <title>Contact & Registration | SRGEC NSS</title>
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="contact.html">
+  <div class="loader"><div class="loader-mark" aria-label="Loading"></div></div>
+
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html">
+        <img src="images/nss_logo.png" alt="NSS Logo" class="logo-img">
+        <div class="brand-text">
+          <strong>SRGEC NSS</strong>
+          <span>Not Me But You</span>
+        </div>
+      </a>
+      <nav class="nav-links" data-nav aria-label="Main navigation"></nav>
+      <div class="nav-actions">
+        <button class="icon-btn" data-theme-toggle aria-label="Toggle theme">&#9680;</button>
+        <button class="menu-toggle" data-menu-toggle aria-label="Open menu">&#9776;</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section alt">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">Connect & Serve</span>
+          <h1 class="section-title">NSS Contact & Registration</h1>
+          <p class="section-desc">Reach out to the NSS Programme Officer or submit volunteer registrations.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Info & Map -->
+    <section class="section">
+      <div class="container grid cols-2">
+        <div class="card reveal" style="padding: 28px;">
+          <span class="eyebrow">NSS Office</span>
+          <h2 style="margin: 10px 0 16px;">Contact Details</h2>
+          <p style="margin-bottom: 10px; color: var(--text);">👤 <strong>Programme Officer:</strong> DR. V. Naveen Kumar</p>
+          <p style="margin-bottom: 10px; color: var(--text);">📧 <strong>Email:</strong> srgecnss@gmail.com</p>
+          <p style="margin-bottom: 10px; color: var(--text);">📞 <strong>Phone:</strong> +91 9666658751</p>
+          <p style="margin-bottom: 10px; color: var(--text);">🏢 <strong>Office:</strong> NSS Programme Officer Room, SRGEC Campus.</p>
+          <p style="color: var(--muted); font-size: 0.9rem; margin-top: 16px;">Seshadri Rao Gudlavalleru Engineering College, Gudlavalleru, Krishna District, Andhra Pradesh 521356.</p>
+        </div>
+
+        <div class="card reveal" style="overflow: hidden; border-radius: var(--radius);">
+          <iframe title="SRGEC Map" src="https://www.google.com/maps?q=Seshadri%20Rao%20Gudlavalleru%20Engineering%20College&output=embed" width="100%" height="320" style="border:0;" loading="lazy"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Registration Forms -->
+    <section class="section alt" id="join">
+      <div class="container grid cols-2">
+        <!-- NSS Volunteer Registration -->
+        <form class="card reveal" style="padding: 28px; display: flex; flex-direction: column; gap: 14px;" data-registration-form="NSS Volunteer">
+          <span class="eyebrow">Volunteer Enrollment</span>
+          <h2 style="font-size: 1.4rem;">NSS Volunteer Registration</h2>
+          <input type="text" class="input-search" name="name" placeholder="Full Name" required>
+          <input type="text" class="input-search" name="roll" placeholder="Roll Number" required>
+          <input type="text" class="input-search" name="branch" placeholder="Branch & Year" required>
+          <input type="tel" class="input-search" name="phone" placeholder="Phone Number" required>
+          <textarea class="input-search" name="reason" placeholder="Why do you want to join NSS?" rows="3"></textarea>
+          <button type="submit" class="btn orange">Submit Volunteer Form &rarr;</button>
+          <p data-form-status style="font-weight: 600; text-align: center;"></p>
+        </form>
+
+        <!-- Band Team Registration -->
+        <form class="card reveal" style="padding: 28px; display: flex; flex-direction: column; gap: 14px;" data-registration-form="Band Team">
+          <span class="eyebrow">Band Unit</span>
+          <h2 style="font-size: 1.4rem;">Band Team Registration</h2>
+          <input type="text" class="input-search" name="name" placeholder="Full Name" required>
+          <input type="text" class="input-search" name="roll" placeholder="Roll Number" required>
+          <input type="text" class="input-search" name="instrument" placeholder="Preferred Instrument" required>
+          <input type="text" class="input-search" name="availability" placeholder="Practice Availability (e.g. Wed & Sat)" required>
+          <textarea class="input-search" name="experience" placeholder="Previous parade or musical experience" rows="2"></textarea>
+          <button type="submit" class="btn secondary">Submit Band Form &rarr;</button>
+          <p data-form-status style="font-weight: 600; text-align: center;"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <strong>SRGEC NSS Unit</strong>
+        <p>"NOT ME BUT YOU"</p>
+        <p style="font-size: 0.88rem; color: var(--muted); margin-top: 10px;">Seshadri Rao Gudlavalleru Engineering College, Gudlavalleru, AP.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="activities.html">Activities</a></li>
+          <li><a href="camps.html">Camps</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>NSS Office</h4>
+        <p style="color: var(--muted); font-size: 0.9rem;">Email: srgecnss@gmail.com</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span data-year>2026</span> SRGEC National Service Scheme. All Rights Reserved.
+    </div>
+  </footer>
+
+  <!-- Firebase App & Firestore SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

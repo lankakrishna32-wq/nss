@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore blood donation, Swachh Bharat, tree plantation, and community service drives conducted by SRGEC NSS.">
+  <title>NSS Activities | SRGEC NSS</title>
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="activities.html">
+  <div class="loader"><div class="loader-mark" aria-label="Loading"></div></div>
+
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html">
+        <img src="images/nss_logo.png" alt="NSS Logo" class="logo-img">
+        <div class="brand-text">
+          <strong>SRGEC NSS</strong>
+          <span>Not Me But You</span>
+        </div>
+      </a>
+      <nav class="nav-links" data-nav aria-label="Main navigation"></nav>
+      <div class="nav-actions">
+        <button class="icon-btn" data-theme-toggle aria-label="Toggle theme">&#9680;</button>
+        <button class="menu-toggle" data-menu-toggle aria-label="Open menu">&#9776;</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section alt">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">Service Portfolio</span>
+          <h1 class="section-title">NSS Community Activities</h1>
+          <p class="section-desc">Blood donation, environmental conservation, health awareness, clean campus drives, and village education campaigns.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="filters-bar reveal">
+          <input type="text" class="input-search" data-search placeholder="🔍 Search activities by keyword, location, or tag...">
+          <select class="select-filter" data-year-filter><option value="">All Years</option></select>
+          <select class="select-filter" data-category-filter><option value="">All Categories</option></select>
+        </div>
+
+        <div class="grid cols-3" data-activities></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <strong>SRGEC NSS Unit</strong>
+        <p>"NOT ME BUT YOU"</p>
+        <p style="font-size: 0.88rem; color: var(--muted); margin-top: 10px;">Seshadri Rao Gudlavalleru Engineering College, Gudlavalleru, Krishna District, AP.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About NSS</a></li>
+          <li><a href="camps.html">Camps</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>NSS Office</h4>
+        <p style="color: var(--muted); font-size: 0.9rem;">Email: nss@srgec.ac.in</p>
+        <p style="color: var(--muted); font-size: 0.9rem; margin-top: 6px;">Location: SRGEC Campus, Gudlavalleru</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span data-year>2026</span> SRGEC National Service Scheme. All Rights Reserved.
+    </div>
+  </footer>
+
+  <!-- Firebase App & Firestore SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
