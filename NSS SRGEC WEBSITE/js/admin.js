@@ -35,67 +35,136 @@ function showSyncBadge(message, isSuccess) {
 }
 
 async function getData() {
-  // 1. First priority: Check Cloud Firestore for live updates
-  if (window.NssFirebase && window.NssFirebase.isReady()) {
-    try {
-      const cloudData = await window.NssFirebase.fetchData();
-      if (cloudData && cloudData.version) {
-        localStorage.setItem(DATA_KEY, JSON.stringify(cloudData));
-        showSyncBadge("☁️ Live & Synced with Cloud", true);
-        return cloudData;
+
+  // 1. Try loading live data from Node.js + MongoDB
+  try {
+    const response = await fetch("/api/site");
+
+    if (response.ok) {
+      const result = await response.json();
+
+      if (result.success && result.data && result.data.version) {
+
+        localStorage.setItem(
+          DATA_KEY,
+          JSON.stringify(result.data)
+        );
+
+        showSyncBadge(
+          "🟢 Live & Synced with MongoDB",
+          true
+        );
+
+        return result.data;
       }
-    } catch (e) {
-      console.warn("Could not fetch from Firestore, falling back:", e);
     }
+
+    console.warn(
+      "Could not fetch from Node.js, falling back..."
+    );
+
+  } catch (e) {
+
+    console.warn(
+      "Node.js server unavailable, falling back:",
+      e
+    );
   }
+
 
   // 2. Check localStorage
   const stored = localStorage.getItem(DATA_KEY);
+
   if (stored) {
+
     try {
+
       const parsed = JSON.parse(stored);
+
       if (parsed.version === REQUIRED_DATA_VERSION) {
-        // If Firestore is empty, auto-seed with local data so Cloud stays updated
-        if (window.NssFirebase && window.NssFirebase.isReady()) {
-          window.NssFirebase.saveData(parsed).then(() => {
-            showSyncBadge("☁️ Live & Synced with Cloud", true);
-          }).catch(console.warn);
-        }
         return parsed;
       }
+
     } catch (e) {
-      console.warn("Invalid stored data, re-fetching site.json");
+
+      console.warn(
+        "Invalid stored data, re-fetching site.json"
+      );
     }
   }
 
-  // 3. Fallback to static site.json and seed both localStorage and Firestore
+
+  // 3. Final fallback to site.json
   const response = await fetch("/data/site.json");
   const data = await response.json();
-  localStorage.setItem(DATA_KEY, JSON.stringify(data));
-  if (window.NssFirebase && window.NssFirebase.isReady()) {
-    window.NssFirebase.saveData(data).then(() => {
-      showSyncBadge("☁️ Live & Synced with Cloud", true);
-    }).catch(console.warn);
-  }
+
+  localStorage.setItem(
+    DATA_KEY,
+    JSON.stringify(data)
+  );
+
   return data;
 }
 
-async function saveData(data) {
-  // Immediately persist locally
-  localStorage.setItem(DATA_KEY, JSON.stringify(data));
 
-  // Automatically sync to Cloud Firestore so all users see updates immediately
-  if (window.NssFirebase && window.NssFirebase.isReady()) {
-    showSyncBadge("☁️ Syncing to Cloud...", null);
-    try {
-      await window.NssFirebase.saveData(data);
-      showSyncBadge("☁️ Live & Synced for All Users", true);
-    } catch (err) {
-      console.error("Firestore sync error:", err);
-      showSyncBadge("⚠️ Cloud Sync Failed (Saved Locally)", false);
+async function saveData(data) {
+
+  // Immediately update localStorage
+  localStorage.setItem(
+    DATA_KEY,
+    JSON.stringify(data)
+  );
+
+  // Save to Node.js + MongoDB
+  showSyncBadge(
+    "💾 Saving to MongoDB...",
+    null
+  );
+
+  try {
+
+    const response = await fetch("/api/site", {
+      method: "PUT",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify(data)
+    });
+
+
+    const result = await response.json();
+
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.message || "MongoDB save failed"
+      );
     }
+
+
+    showSyncBadge(
+      "🟢 Saved & Synced with MongoDB",
+      true
+    );
+
+  } catch (err) {
+
+    console.error(
+      "MongoDB save error:",
+      err
+    );
+
+    showSyncBadge(
+      "⚠️ MongoDB Sync Failed (Saved Locally)",
+      false
+    );
+
+    throw err;
   }
 }
+
 
 function escapeHtml(value = "") {
   return String(value).replace(/[&<>"']/g, (char) => ({
@@ -166,9 +235,48 @@ function initLogin() {
   });
 }
 
+async function loadRegistrations() {
+  const registrations = document.querySelector(
+    "[data-registration-table]"
+  );
+
+  if (!registrations) return;
+
+  try {
+    const response = await fetch("/api/registrations");
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch registrations");
+    }
+
+    const result = await response.json();
+
+    if (!result.success || !result.data) {
+      throw new Error(
+        result.message || "Failed to load registrations"
+      );
+    }
+
+    if (result.data.length === 0) {
+      registrations.innerHTML =
+        '<div class="card card-body" style="text-align:center;color:var(--muted);padding:32px"><p>No volunteer registrations received yet.</p></div>';
+    } else {
+      registrations.innerHTML = makeTable(
+        result.data,
+        ["type", "name", "roll", "branch", "createdAt"],
+        false
+      );
+    }
+  } catch (error) {
+    console.error("Failed to load registrations:", error);
+
+    registrations.innerHTML =
+      '<div class="card card-body" style="text-align:center;color:#ef4444;padding:32px"><p>Could not load volunteer registrations.</p></div>';
+  }
+}
+
 function fillOverview(data) {
   const wrap = document.querySelector("[data-admin-stats]");
-  const registrations = document.querySelector("[data-registration-table]");
   const roles = document.querySelector("[data-admin-roles]");
 
   if (wrap) {
@@ -185,14 +293,6 @@ function fillOverview(data) {
     wrap.innerHTML = cards.map(function(item) {
       return '<article class="stat-card"><div class="stat-value">' + item[1] + '</div><div class="stat-label">' + item[0] + '</div></article>';
     }).join("");
-  }
-
-  if (registrations) {
-    if (!data.registrations || data.registrations.length === 0) {
-      registrations.innerHTML = '<div class="card card-body" style="text-align:center;color:var(--muted);padding:32px"><p>No volunteer registrations received yet.</p></div>';
-    } else {
-      registrations.innerHTML = makeTable(data.registrations, ["type", "name", "roll", "branch", "createdAt"], false);
-    }
   }
 
   if (roles) {
@@ -333,8 +433,10 @@ function renderManager(data, type, editIndex) {
 
   form.onsubmit = function(event) {
     event.preventDefault();
+
     var submitBtn = form.querySelector('button[type="submit"]');
     var originalText = submitBtn ? submitBtn.textContent : "Save";
+
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = "Saving & Syncing...";
@@ -342,47 +444,146 @@ function renderManager(data, type, editIndex) {
 
     var formData = new FormData(form);
     var item = {};
+
     formData.forEach(function(value, key) {
-      if (key !== "upload") item[key] = value;
+      if (key !== "upload") {
+        item[key] = value;
+      }
     });
+
     item = normalizeItem(type, item);
 
     var fileInput = form.querySelector('input[name="upload"]');
-    var file = fileInput && fileInput.files ? fileInput.files[0] : null;
+    var file = fileInput && fileInput.files
+      ? fileInput.files[0]
+      : null;
 
     function proceed(finalImage) {
-      if (finalImage) item.image = finalImage;
-      else if (!item.image && editIndex !== null) item.image = current.image;
 
-      finishSave(data, type, list, item, editIndex).finally(function() {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalText;
-        }
+      if (finalImage) {
+        item.image = finalImage;
+      } else if (!item.image && editIndex !== null) {
+        item.image = current.image;
+      }
+
+      finishSave(data, type, list, item, editIndex)
+        .finally(function() {
+
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+          }
+
+        });
+    }
+
+    function compressImage(file) {
+
+      return new Promise(function(resolve, reject) {
+
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+
+          var img = new Image();
+
+          img.onload = function() {
+
+            var maxSize = 1200;
+
+            var width = img.width;
+            var height = img.height;
+
+            if (width > maxSize || height > maxSize) {
+
+              if (width > height) {
+
+                height = Math.round(height * maxSize / width);
+                width = maxSize;
+
+              } else {
+
+                width = Math.round(width * maxSize / height);
+                height = maxSize;
+
+              }
+            }
+
+            var canvas = document.createElement("canvas");
+
+            canvas.width = width;
+            canvas.height = height;
+
+            var ctx = canvas.getContext("2d");
+
+            ctx.drawImage(
+              img,
+              0,
+              0,
+              width,
+              height
+            );
+
+            var compressedImage =
+              canvas.toDataURL("image/jpeg", 0.75);
+
+            resolve(compressedImage);
+          };
+
+          img.onerror = function() {
+            reject(new Error("Could not load image"));
+          };
+
+          img.src = event.target.result;
+        };
+
+        reader.onerror = function() {
+          reject(new Error("Could not read image"));
+        };
+
+        reader.readAsDataURL(file);
       });
     }
 
+
+    // Process uploaded image
     if (file) {
-      showSyncBadge("Optimizing uploaded image...", null);
-      if (window.NssFirebase && window.NssFirebase.compressImage) {
-        window.NssFirebase.compressImage(file).then(function(compressed) {
-          data.uploads = data.uploads || [];
-          data.uploads.unshift({ name: file.name, type: file.type, usedIn: type, createdAt: new Date().toISOString() });
+
+      showSyncBadge(
+        "🖼️ Optimizing uploaded image...",
+        null
+      );
+
+      compressImage(file)
+        .then(function(compressed) {
+
           proceed(compressed);
-        }).catch(function(err) {
-          console.warn("Compression fallback:", err);
+
+        })
+        .catch(function(err) {
+
+          console.warn(
+            "Image compression failed:",
+            err
+          );
+
+          // Fallback: use original image
           var reader = new FileReader();
-          reader.onload = function() { proceed(reader.result); };
+
+          reader.onload = function() {
+            proceed(reader.result);
+          };
+
           reader.readAsDataURL(file);
         });
-      } else {
-        var reader = new FileReader();
-        reader.onload = function() { proceed(reader.result); };
-        reader.readAsDataURL(file);
-      }
+
     } else {
+
+      // No new image selected
       proceed(null);
+
     }
+
   };
 
   var cancelBtn = form.querySelector("[data-cancel-edit]");
@@ -485,28 +686,50 @@ function initSettings(data) {
     });
   });
 
-  // Force Cloud Sync Button
+  // Force MongoDB Sync Button
   var cloudSyncBtn = document.getElementById("btn-cloud-sync");
+
   if (cloudSyncBtn) {
     cloudSyncBtn.addEventListener("click", async function() {
+
       cloudSyncBtn.disabled = true;
+
       var originalHtml = cloudSyncBtn.innerHTML;
-      cloudSyncBtn.textContent = "Syncing with Cloud Firestore...";
+
+      cloudSyncBtn.textContent = "Syncing with MongoDB...";
+
       try {
-        if (window.NssFirebase && window.NssFirebase.isReady()) {
-          await window.NssFirebase.saveData(data);
-          alert("Success! All website data has been synced to Cloud Firestore. Any visitor or device will now see the latest updates.");
-          showSyncBadge("☁️ Live & Synced for All Users", true);
-        } else {
-          alert("Firebase SDK not ready yet. Please check your internet connection and reload.");
-        }
+
+        await saveData(data);
+
+        alert(
+          "Success! All website data has been synced to MongoDB. Any visitor or device will now see the latest updates."
+        );
+
+        showSyncBadge(
+          "🟢 Live & Synced for All Users",
+          true
+        );
+
       } catch (err) {
-        alert("Firestore sync failed: " + err.message);
-        showSyncBadge("⚠️ Cloud Sync Error", false);
+
+        alert(
+          "MongoDB sync failed: " + err.message
+        );
+
+        showSyncBadge(
+          "⚠️ MongoDB Sync Error",
+          false
+        );
+
       } finally {
+
         cloudSyncBtn.disabled = false;
+
         cloudSyncBtn.innerHTML = originalHtml;
+
       }
+
     });
   }
 
@@ -574,6 +797,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   getData().then(function(data) {
     fillOverview(data);
+    loadRegistrations();
     var manager = document.body.getAttribute("data-manager");
     if (manager) renderManager(data, manager);
     initSettings(data);

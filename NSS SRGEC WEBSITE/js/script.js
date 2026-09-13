@@ -13,54 +13,88 @@ const navItems = [
 ];
 
 async function loadSiteData() {
-  // 1. Try reading live from Cloud Firestore first
-  if (window.NssFirebase && window.NssFirebase.isReady()) {
-    try {
-      const cloudData = await window.NssFirebase.fetchData();
-      if (cloudData && cloudData.version) {
-        localStorage.setItem(SITE_KEY, JSON.stringify(cloudData));
-        return cloudData;
+
+  // 1. Try loading live data from Node.js + MongoDB
+  try {
+    const response = await fetch("/api/site");
+
+    if (response.ok) {
+      const result = await response.json();
+
+      if (result.success && result.data && result.data.version) {
+        localStorage.setItem(
+          SITE_KEY,
+          JSON.stringify(result.data)
+        );
+
+        return result.data;
       }
-    } catch (e) {
-      console.warn("Could not fetch from Firestore, falling back:", e);
     }
+
+    console.warn("Could not fetch from Node.js, falling back...");
+  } catch (e) {
+    console.warn(
+      "Node.js server unavailable, falling back:",
+      e
+    );
   }
 
   // 2. Check localStorage for fast instant render
   const stored = localStorage.getItem(SITE_KEY);
+
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
+
       if (parsed.version === REQUIRED_DATA_VERSION) {
-        // If Firestore is empty, seed it with this data
-        if (window.NssFirebase && window.NssFirebase.isReady()) {
-          window.NssFirebase.saveData(parsed).catch(console.warn);
-        }
         return parsed;
       }
+
     } catch (e) {
-      console.warn("Invalid stored data, re-fetching site.json");
+      console.warn(
+        "Invalid stored data, re-fetching site.json"
+      );
     }
   }
 
-  // 3. Fallback to static site.json and seed Firestore
+  // 3. Final fallback to static site.json
   const response = await fetch("data/site.json");
   const data = await response.json();
-  localStorage.setItem(SITE_KEY, JSON.stringify(data));
-  if (window.NssFirebase && window.NssFirebase.isReady()) {
-    window.NssFirebase.saveData(data).catch(console.warn);
-  }
+
+  localStorage.setItem(
+    SITE_KEY,
+    JSON.stringify(data)
+  );
+
   return data;
 }
 
 async function saveSiteData(data) {
   localStorage.setItem(SITE_KEY, JSON.stringify(data));
-  if (window.NssFirebase && window.NssFirebase.isReady()) {
-    try {
-      await window.NssFirebase.saveData(data);
-    } catch (err) {
-      console.warn("Firestore save error:", err);
+
+  try {
+    const response = await fetch("/api/site", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status}`);
     }
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.message || "MongoDB save failed");
+    }
+
+    console.log("Site data saved to MongoDB successfully");
+
+  } catch (err) {
+    console.warn("MongoDB save error:", err);
   }
 }
 
@@ -717,43 +751,67 @@ function renderEvents(events) {
 
 // Registration form handler
 function initRegistrations(data) {
-  document.querySelectorAll("[data-registration-form]").forEach(form => {
+  document.querySelectorAll("[data-registration-form]").forEach((form) => {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const submitBtn = form.querySelector('button[type="submit"]');
       const originalText = submitBtn ? submitBtn.textContent : "Submit";
+
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.textContent = "Submitting...";
       }
 
-      const formData = Object.fromEntries(new FormData(form).entries());
-      formData.type = form.dataset.registrationForm;
-      formData.createdAt = new Date().toISOString();
-
-      // Submit directly to Cloud Firestore
-      if (window.NssFirebase && window.NssFirebase.isReady()) {
-        try {
-          await window.NssFirebase.submitRegistration(formData);
-        } catch (err) {
-          console.warn("Firestore registration submission error:", err);
-        }
-      }
-
-      data.registrations = data.registrations || [];
-      data.registrations.unshift(formData);
-      saveSiteData(data);
-
-      form.reset();
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-      }
-
       const statusEl = form.querySelector("[data-form-status]");
-      if (statusEl) {
-        statusEl.textContent = "Registration submitted successfully and synced to Cloud!";
-        statusEl.style.color = "var(--green)";
+
+      try {
+        const formData = Object.fromEntries(
+          new FormData(form).entries()
+        );
+
+        formData.type = form.dataset.registrationForm;
+        formData.createdAt = new Date().toISOString();
+
+        // Send registration to Node.js → MongoDB
+        const response = await fetch("/api/registrations", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(
+            result.message || "Registration submission failed"
+          );
+        }
+
+        form.reset();
+
+        if (statusEl) {
+          statusEl.textContent =
+            "Registration submitted successfully!";
+          statusEl.style.color = "var(--green)";
+        }
+
+      } catch (error) {
+        console.error("Registration submission error:", error);
+
+        if (statusEl) {
+          statusEl.textContent =
+            "Registration submission failed. Please try again.";
+          statusEl.style.color = "red";
+        }
+
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
       }
     });
   });
@@ -780,16 +838,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   const data = await loadSiteData();
   renderAllComponents(data);
   initRegistrations(data);
-
-  // Real-Time Live Sync: whenever admin updates activities/camps/gallery/settings,
-  // updates automatically reflect live on any user's open screen!
-  if (window.NssFirebase && window.NssFirebase.isReady()) {
-    window.NssFirebase.listen((freshData) => {
-      if (freshData && freshData.version) {
-        console.log("Live Firestore update received, refreshing views...");
-        localStorage.setItem(SITE_KEY, JSON.stringify(freshData));
-        renderAllComponents(freshData);
-      }
-    });
-  }
-});
+})
