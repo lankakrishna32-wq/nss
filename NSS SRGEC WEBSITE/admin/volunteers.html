@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Volunteer Applications | Hamara Bharat Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body" data-volunteers-page>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <a class="brand" href="/index.html">
+        <img src="/images/Logo.jpeg" alt="Hamara Bharat Logo" class="logo-img">
+        <span>
+          <strong>Hamara Bharat</strong>
+          <span>Admin Panel</span>
+        </span>
+      </a>
+      <nav class="admin-nav" data-admin-nav>
+        <a href="/admin/dashboard.html">Dashboard</a>
+        <a href="/admin/activities.html">Activities</a>
+        <a href="/admin/members.html">Core Team</a>
+        <a href="/admin/volunteers.html">Volunteers</a>
+        <a href="/admin/gallery.html">Gallery</a>
+        <a href="/admin/settings.html">Settings</a>
+      </nav>
+    </aside>
+    <main class="admin-main">
+      <div class="admin-top">
+        <div>
+          <span class="eyebrow">Volunteer Enrollment</span>
+          <h1>Volunteer Applications</h1>
+        </div>
+        <button class="btn ghost" data-logout>Logout</button>
+      </div>
+
+      <div class="card card-body" style="margin-bottom: 24px;">
+        <p style="color: var(--muted); line-height: 1.6;">New applications remain pending until an Admin approves them. Only approved applicants are added to the volunteer list.</p>
+      </div>
+
+      <section class="section" style="padding: 0 0 32px;">
+        <div class="section-head" style="margin-bottom: 16px;">
+          <span class="eyebrow">Action Required</span>
+          <h2 style="font-size: 1.35rem;">Pending Applications</h2>
+        </div>
+        <div class="table-wrap" data-pending-volunteers></div>
+      </section>
+
+      <section class="section" style="padding: 0;">
+        <div class="section-head" style="margin-bottom: 16px;">
+          <div>
+            <span class="eyebrow">Confirmed</span>
+            <h2 style="font-size: 1.35rem;">Total Volunteers</h2>
+          </div>
+          <button class="btn orange" type="button" data-export-volunteers>Download Excel Sheet</button>
+        </div>
+        <div class="table-wrap" data-approved-volunteers></div>
+      </section>
+    </main>
+  </div>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

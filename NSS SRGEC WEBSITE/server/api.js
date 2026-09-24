@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { getDB } = require('./db');
 
 async function getSiteContent() {
@@ -37,6 +38,7 @@ async function saveRegistration(data) {
 
     const registration = {
         ...data,
+        status: 'pending',
         createdAt: data.createdAt || new Date().toISOString()
     };
 
@@ -50,6 +52,60 @@ async function saveRegistration(data) {
     };
 }
 
+async function reviewRegistration(id, status) {
+    if (!['approved', 'rejected'].includes(status)) {
+        throw new Error('Registration status must be approved or rejected');
+    }
+
+    if (!ObjectId.isValid(id)) {
+        throw new Error('Invalid registration id');
+    }
+
+    const db = getDB();
+    const registrationId = new ObjectId(id);
+    const registration = await db
+        .collection('registrations')
+        .findOne({ _id: registrationId });
+
+    if (!registration) {
+        throw new Error('Registration not found');
+    }
+
+    const reviewedAt = new Date().toISOString();
+    await db.collection('registrations').updateOne(
+        { _id: registrationId },
+        { $set: { status, reviewedAt } }
+    );
+
+    const contentCollection = db.collection('site_data');
+    if (status === 'approved') {
+        const volunteer = {
+            registrationId: id,
+            name: registration.name || '',
+            phone: registration.phone || '',
+            reason: registration.reason || '',
+            registeredAt: registration.createdAt,
+            approvedAt: reviewedAt
+        };
+
+        await contentCollection.updateOne(
+            { _id: 'content', 'volunteers.registrationId': { $ne: id } },
+            { $push: { volunteers: volunteer } }
+        );
+    } else {
+        await contentCollection.updateOne(
+            { _id: 'content' },
+            { $pull: { volunteers: { registrationId: id } } }
+        );
+    }
+
+    return {
+        ...registration,
+        status,
+        reviewedAt
+    };
+}
+
 
 async function getRegistrations() {
     const db = getDB();
@@ -57,8 +113,28 @@ async function getRegistrations() {
     return await db
         .collection('registrations')
         .find({})
+        .project({ 'aadhaarCard.data': 0 })
         .sort({ createdAt: -1 })
         .toArray();
+}
+
+async function getAadhaarCard(id) {
+    if (!ObjectId.isValid(id)) {
+        throw new Error('Invalid registration id');
+    }
+
+    const registration = await getDB()
+        .collection('registrations')
+        .findOne(
+            { _id: new ObjectId(id), type: 'NSS Volunteer' },
+            { projection: { aadhaarCard: 1 } }
+        );
+
+    if (!registration || !registration.aadhaarCard || !registration.aadhaarCard.data) {
+        throw new Error('Aadhaar document not found');
+    }
+
+    return registration.aadhaarCard;
 }
 
 
@@ -66,5 +142,7 @@ module.exports = {
     getSiteContent,
     saveSiteContent,
     saveRegistration,
-    getRegistrations
-};  
+    getRegistrations,
+    getAadhaarCard,
+    reviewRegistration
+};

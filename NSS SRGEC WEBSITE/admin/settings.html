@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Settings | SRGEC NSS Admin</title>
+  <title>Settings | Hamara Bharat Admin</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/admin.css">
 </head>
@@ -11,19 +11,17 @@
   <div class="admin-layout">
     <aside class="admin-sidebar">
       <a class="brand" href="/index.html">
-        <span class="logo">NSS</span>
+        <img src="/images/Logo.jpeg" alt="Hamara Bharat Logo" class="logo-img">
         <span>
-          <strong>SRGEC NSS</strong>
+          <strong>Hamara Bharat</strong>
           <span>Admin Panel</span>
         </span>
       </a>
       <nav class="admin-nav" data-admin-nav>
         <a href="/admin/dashboard.html">Dashboard</a>
         <a href="/admin/activities.html">Activities</a>
-        <a href="/admin/camps.html">Camps</a>
-        <a href="/admin/members.html">Members</a>
-        <a href="/admin/band-captains.html">Band Captains</a>
-        <a href="/admin/band.html">Band Team</a>
+        <a href="/admin/members.html">Core Team</a>
+        <a href="/admin/volunteers.html">Volunteers</a>
         <a href="/admin/gallery.html">Gallery</a>
         <a href="/admin/settings.html">Settings</a>
       </nav>
@@ -46,7 +44,7 @@
           <label>Year of Establishment<input class="input" name="year"></label>
           <label>First NSS Programme Officer<input class="input" name="firstOfficer"></label>
           <label>Faculty Coordinator<input class="input" name="facultyCoordinator"></label>
-          <label>Email<input class="input" name="email"></label>
+          <label>Email<input class="input" name="Email"></label>
           <label>Phone<input class="input" name="phone"></label>
           <label>Address<input class="input" name="address"></label>
           <div class="actions">
@@ -58,13 +56,9 @@
         <div class="card card-body" style="display: flex; flex-direction: column; gap: 20px;">
           <h2>Cloud Sync & Backup</h2>
           <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.6;">
-            The admin dashboard synchronizes automatically in real-time with Google Cloud Firestore so all changes show immediately for every visitor across all devices.
+            The admin dashboard synchronizes automatically with the MongoDB database, so all changes are available to visitors across all devices.
           </p>
-          <div style="background: rgba(34, 197, 94, 0.08); padding: 16px; border-radius: var(--radius-sm); border: 1px solid rgba(34, 197, 94, 0.3);">
-            <h3 style="font-size: 1rem; color: #4ade80; margin-bottom: 8px;">Cloud Firestore Sync</h3>
-            <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Push current database directly to Cloud Firestore so all visitors see the latest updates instantly.</p>
-            <button class="btn" type="button" id="btn-cloud-sync" style="background: #22c55e; color: #fff; font-weight: 600;">☁️ Force Sync to Cloud Firestore Now</button>
-          </div>
+
           <div style="background: var(--bg-alt); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
             <h3 style="font-size: 1rem; margin-bottom: 8px;">Export Site Data</h3>
             <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Download current database as JSON.</p>
@@ -72,7 +66,7 @@
           </div>
           <div style="background: var(--bg-alt); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
             <h3 style="font-size: 1rem; margin-bottom: 8px;">Import Site Data</h3>
-            <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Upload a JSON backup file to restore and sync to Cloud.</p>
+            <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Upload a JSON backup file to restore site data to MongoDB.</p>
             <input type="file" id="file-import-data" accept=".json" class="input" style="margin-bottom: 10px;">
             <p id="import-status" style="font-size: 0.85rem; font-weight: 600;"></p>
           </div>
@@ -85,10 +79,7 @@
       </div>
     </main>
   </div>
-  <!-- Firebase App & Firestore SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
-  <script src="/js/firebase-config.js"></script>
+
   <script src="/js/admin.js"></script>
 </body>
 </html>

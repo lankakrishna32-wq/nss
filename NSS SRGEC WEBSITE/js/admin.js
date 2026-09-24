@@ -235,43 +235,181 @@ function initLogin() {
   });
 }
 
-async function loadRegistrations() {
-  const registrations = document.querySelector(
-    "[data-registration-table]"
-  );
+function volunteerTable(records, pending) {
+  if (!records.length) {
+    return '<div class="card card-body" style="text-align:center;color:var(--muted);padding:32px"><p>' +
+      (pending ? 'No volunteer applications are awaiting review.' : 'No volunteers have been approved yet.') +
+      '</p></div>';
+  }
 
-  if (!registrations) return;
+  var fields = volunteerDataFields(records);
+  var html = '<table><thead><tr>' + fields.map(function(field) {
+    return '<th>' + escapeHtml(volunteerFieldLabel(field)) + '</th>';
+  }).join('') + '<th>Applied</th><th>Aadhaar File</th><th>Action</th></tr></thead><tbody>';
+
+  records.forEach(function(record) {
+    var id = String(record._id || '');
+    html += '<tr>' + fields.map(function(field) {
+      var value = record[field];
+      if (Array.isArray(value)) value = value.join(', ');
+      return '<td>' + escapeHtml(value == null || typeof value === 'object' ? '' : value) + '</td>';
+    }).join('') +
+      '<td>' + escapeHtml(record.createdAt ? new Date(record.createdAt).toLocaleDateString('en-IN') : '') + '</td>' +
+      '<td>' + (record.aadhaarCard
+        ? '<a class="btn ghost" href="/api/registrations/' + encodeURIComponent(id) + '/aadhaar" target="_blank" rel="noopener">View Document</a>'
+        : 'Not attached') + '</td>';
+    if (pending) {
+      html += '<td><div style="display:flex;gap:6px"><button class="btn orange" data-approve-volunteer="' + escapeHtml(id) + '">Approve</button><button class="btn ghost" data-reject-volunteer="' + escapeHtml(id) + '" style="color:#ef4444;border-color:rgba(239,68,68,0.4)">Reject</button></div></td>';
+    } else {
+      html += '<td><button class="btn ghost" data-remove-volunteer="' + escapeHtml(id) + '" style="color:#ef4444;border-color:rgba(239,68,68,0.4)">Remove</button></td>';
+    }
+    html += '</tr>';
+  });
+
+  return html + '</tbody></table>';
+}
+
+function volunteerDataFields(records) {
+  var excluded = { _id: true, type: true, status: true, createdAt: true, reviewedAt: true, aadhaarCard: true };
+  var fields = [];
+  records.forEach(function(record) {
+    Object.keys(record).forEach(function(field) {
+      var value = record[field];
+      if (!excluded[field] && value != null && (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || Array.isArray(value)) && fields.indexOf(field) === -1) {
+        fields.push(field);
+      }
+    });
+  });
+  var preferredOrder = ['name', 'phone', 'city', 'District', 'reason'];
+  return fields.sort(function(a, b) {
+    var aIndex = preferredOrder.indexOf(a);
+    var bIndex = preferredOrder.indexOf(b);
+    if (aIndex === -1 && bIndex === -1) return 0;
+    if (aIndex === -1) return 1;
+    if (bIndex === -1) return -1;
+    return aIndex - bIndex;
+  });
+}
+
+function volunteerFieldLabel(field) {
+  return field.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/^./, function(letter) {
+    return letter.toUpperCase();
+  });
+}
+
+async function loadVolunteerApplications() {
+  var pendingWrap = document.querySelector('[data-pending-volunteers]');
+  var approvedWrap = document.querySelector('[data-approved-volunteers]');
+  if (!pendingWrap || !approvedWrap) return;
 
   try {
-    const response = await fetch("/api/registrations");
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch registrations");
+    var response = await fetch('/api/registrations');
+    var result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Failed to load volunteer applications');
     }
 
-    const result = await response.json();
+    var volunteerApplications = (result.data || []).filter(function(record) {
+      return record.type === 'NSS Volunteer';
+    });
+    var pending = volunteerApplications.filter(function(record) {
+      return !record.status || record.status === 'pending';
+    });
+    var approved = volunteerApplications.filter(function(record) {
+      return record.status === 'approved';
+    });
 
-    if (!result.success || !result.data) {
-      throw new Error(
-        result.message || "Failed to load registrations"
-      );
+    var exportButton = document.querySelector('[data-export-volunteers]');
+    if (exportButton) {
+      exportButton.addEventListener('click', function() {
+        downloadVolunteerSpreadsheet(approved);
+      });
+      exportButton.disabled = false;
     }
 
-    if (result.data.length === 0) {
-      registrations.innerHTML =
-        '<div class="card card-body" style="text-align:center;color:var(--muted);padding:32px"><p>No volunteer registrations received yet.</p></div>';
-    } else {
-      registrations.innerHTML = makeTable(
-        result.data,
-        ["type", "name", "roll", "branch", "createdAt"],
-        false
-      );
-    }
+    pendingWrap.innerHTML = volunteerTable(pending, true);
+    approvedWrap.innerHTML = volunteerTable(approved, false);
+
+    pendingWrap.querySelectorAll('[data-approve-volunteer]').forEach(function(button) {
+      button.addEventListener('click', function() {
+        reviewVolunteerApplication(button.dataset.approveVolunteer, 'approved');
+      });
+    });
+    pendingWrap.querySelectorAll('[data-reject-volunteer]').forEach(function(button) {
+      button.addEventListener('click', function() {
+        reviewVolunteerApplication(button.dataset.rejectVolunteer, 'rejected');
+      });
+    });
+    approvedWrap.querySelectorAll('[data-remove-volunteer]').forEach(function(button) {
+      button.addEventListener('click', function() {
+        reviewVolunteerApplication(button.dataset.removeVolunteer, 'rejected', 'remove');
+      });
+    });
   } catch (error) {
-    console.error("Failed to load registrations:", error);
+    var message = '<div class="card card-body" style="color:#ef4444;padding:24px"><p>Could not load volunteer applications. ' + escapeHtml(error.message) + '</p></div>';
+    pendingWrap.innerHTML = message;
+    approvedWrap.innerHTML = '';
+  }
+}
 
-    registrations.innerHTML =
-      '<div class="card card-body" style="text-align:center;color:#ef4444;padding:32px"><p>Could not load volunteer registrations.</p></div>';
+function downloadVolunteerSpreadsheet(volunteers) {
+  if (!volunteers.length) {
+    alert('There are no approved volunteers to export yet.');
+    return;
+  }
+
+  var fields = volunteerDataFields(volunteers);
+  var columns = fields.map(function(field) { return [volunteerFieldLabel(field), field]; });
+  columns.push(['Applied on', 'createdAt'], ['Approved on', 'reviewedAt']);
+  var escapeCell = function(value) {
+    var text = value == null ? '' : String(value);
+    // Prevent spreadsheet programs from treating user-submitted text as a formula.
+    if (/^[\s\u0000-\u001f]*[=+@\-]/.test(text)) text = "'" + text;
+    return '"' + text.replace(/"/g, '""') + '"';
+  };
+  var rows = [columns.map(function(column) { return escapeCell(column[0]); })];
+
+  volunteers.forEach(function(volunteer) {
+    rows.push(columns.map(function(column) {
+      var value = volunteer[column[1]] || '';
+      if (Array.isArray(value)) value = value.join(', ');
+      if (column[1] === 'createdAt' || column[1] === 'reviewedAt') {
+        value = value ? new Date(value).toLocaleDateString('en-IN') : '';
+      }
+      return escapeCell(value);
+    }));
+  });
+
+  var csv = '\uFEFF' + rows.map(function(row) { return row.join(','); }).join('\r\n');
+  var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  var link = document.createElement('a');
+  link.href = url;
+  link.download = 'nss-approved-volunteers-' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function reviewVolunteerApplication(id, status, actionLabel) {
+  var action = actionLabel || (status === 'approved' ? 'approve' : 'reject');
+  if (!confirm('Are you sure you want to ' + action + ' this volunteer application?')) return;
+
+  try {
+    var response = await fetch('/api/registrations/' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: status })
+    });
+    var result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Could not update volunteer application');
+    }
+
+    showSyncBadge(status === 'approved' ? 'Volunteer approved' : (action === 'remove' ? 'Volunteer removed' : 'Volunteer application rejected'), true);
+    loadVolunteerApplications();
+  } catch (error) {
+    showSyncBadge(error.message || 'Could not update volunteer application', false);
   }
 }
 
@@ -280,14 +418,11 @@ function fillOverview(data) {
   const roles = document.querySelector("[data-admin-roles]");
 
   if (wrap) {
-    const captainCount = (data.band && data.band.captains) ? data.band.captains.length : 2;
-    const bandCount = (data.band && data.band.members) ? data.band.members.length : 8;
+    var approvedVolunteerCount = Array.isArray(data.volunteers) ? data.volunteers.length : 0;
     const cards = [
-      ["Volunteers Count", data.stats && data.stats[0] ? data.stats[0].value : 240],
+      ["Volunteers Count", approvedVolunteerCount],
       ["Total Activities", data.activities ? data.activities.length : 0],
-      ["National Camps", data.camps ? data.camps.length : 0],
-      ["Band Captains", captainCount],
-      ["Band Members", bandCount],
+      ["Core Team Members", data.members ? data.members.length : 0],
       ["Gallery Items", data.gallery ? data.gallery.length : 0]
     ];
     wrap.innerHTML = cards.map(function(item) {
@@ -305,10 +440,7 @@ function fillOverview(data) {
 
 function managerFields(type) {
   if (type === "activities") return ["title", "description", "date", "location", "category", "volunteers", "organizers", "image"];
-  if (type === "camps") return ["name", "description", "dates", "location", "state", "authority", "image"];
-  if (type === "members") return ["name", "role", "branch", "roll", "period", "status", "bio", "image"];
-  if (type === "band-captains" || type === "captains") return ["name", "role", "branch", "roll", "period", "status", "bio", "image"];
-  if (type === "band" || type === "band-members") return ["name", "role", "branch", "roll", "status", "image"];
+  if (type === "members") return ["name", "role", "designation", "branch", "roll", "period", "status", "Email", "phone", "college", "bio", "achievements", "camps", "image"];
   return ["title", "type", "year", "album", "image"];
 }
 
@@ -343,7 +475,6 @@ function makeInput(field, value) {
   if (field === "volunteers" || field === "year") inputType = "number";
   var placeholder = "";
   if (field === "period") placeholder = ' placeholder="e.g. 2024 - 2026"';
-  if (field === "role") placeholder = ' placeholder="e.g. NSS Band Captain (Active) or Side Drum Lead"';
   return '<label>' + label + '<input class="input" name="' + field + '" type="' + inputType + '" value="' + escapeHtml(value) + '"' + placeholder + '></label>';
 }
 
@@ -399,20 +530,8 @@ function renderManager(data, type, editIndex) {
   var list;
   var entityName;
 
-  data.band = data.band || {};
-  data.band.captains = data.band.captains || [];
-  data.band.members = data.band.members || [];
-
-  if (type === "band-captains" || type === "captains") {
-    list = data.band.captains;
-    entityName = "Band Captain";
-  } else if (type === "band" || type === "band-members") {
-    list = data.band.members;
-    entityName = "Band Member";
-  } else {
-    list = data[type] || [];
-    entityName = type.slice(0, -1);
-  }
+  list = data[type] || [];
+  entityName = type === "members" ? "Core Team Member" : type.slice(0, -1);
 
   var current = (editIndex === null) ? {} : (list[editIndex] || {});
 
@@ -426,10 +545,10 @@ function renderManager(data, type, editIndex) {
     formHtml += '<button class="btn ghost" type="button" data-cancel-edit>Cancel</button>';
   }
   formHtml += '</div>';
-  formHtml += '<p class="meta">⚡ Changes automatically sync in real-time to Cloud Firestore for all website visitors.</p>';
+  formHtml += '<p class="meta">⚡ Changes automatically sync with MongoDB for all website visitors.</p>';
 
   form.innerHTML = formHtml;
-  table.innerHTML = makeTable(list, fields.slice(0, 4));
+  table.innerHTML = makeTable(list, type === "members" ? ["name", "role", "status", "period"] : fields.slice(0, 4));
 
   form.onsubmit = function(event) {
     event.preventDefault();
@@ -606,11 +725,6 @@ function renderManager(data, type, editIndex) {
       btn.addEventListener("click", function() {
         if (confirm("Are you sure you want to delete this " + entityName + "?")) {
           list.splice(Number(btn.getAttribute("data-delete")), 1);
-          if (type === "band-captains" || type === "captains") {
-            data.band.captains = list;
-          } else if (type === "band" || type === "band-members") {
-            data.band.members = list;
-          }
           saveData(data).then(function() {
             renderManager(data, type);
           });
@@ -625,13 +739,6 @@ async function finishSave(data, type, list, item, editIndex) {
     list.unshift(item);
   } else {
     list[editIndex] = item;
-  }
-  if (type === "band-captains" || type === "captains") {
-    data.band = data.band || {};
-    data.band.captains = list;
-  } else if (type === "band" || type === "band-members") {
-    data.band = data.band || {};
-    data.band.members = list;
   }
   await saveData(data);
   renderManager(data, type);
@@ -649,7 +756,7 @@ function initSettings(data) {
   if (form.year) form.year.value = (data.home && data.home.year) || "";
   if (form.firstOfficer) form.firstOfficer.value = (data.home && data.home.firstOfficer) || "";
   if (form.facultyCoordinator) form.facultyCoordinator.value = (data.home && data.home.facultyCoordinator) || "DR. V. Naveen Kumar";
-  if (form.email) form.email.value = (data.contact && data.contact.email) || "srgecnss@gmail.com";
+  if (form.Email) form.Email.value = (data.contact && data.contact.Email) || "hamarabharatyuvashakti@gmail.com";
   if (form.phone) form.phone.value = (data.contact && data.contact.phone) || "+91 9666658751";
   if (form.address) form.address.value = (data.contact && data.contact.address) || "";
 
@@ -673,14 +780,14 @@ function initSettings(data) {
     data.home.facultyCoordinator = form.facultyCoordinator.value;
 
     data.contact = data.contact || {};
-    data.contact.email = form.email.value;
+    data.contact.Email = form.Email.value;
     data.contact.phone = form.phone.value;
     data.contact.address = form.address.value;
 
     saveData(data).then(function() {
       var status = document.querySelector("[data-save-status]");
       if (status) {
-        status.textContent = "Settings saved and synced with Cloud Firestore for all users!";
+        status.textContent = "Settings saved and synced with MongoDB for all users!";
         setTimeout(function() { status.textContent = ""; }, 4000);
       }
     });
@@ -759,7 +866,7 @@ function initSettings(data) {
             saveData(imported).then(function() {
               var st = document.getElementById("import-status");
               if (st) {
-                st.textContent = "Data imported & synced with Cloud! Reloading...";
+                st.textContent = "Data imported & synced with MongoDB! Reloading...";
                 st.style.color = "var(--green)";
               }
               setTimeout(function() { location.reload(); }, 1200);
@@ -797,7 +904,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   getData().then(function(data) {
     fillOverview(data);
-    loadRegistrations();
+    loadVolunteerApplications();
     var manager = document.body.getAttribute("data-manager");
     if (manager) renderManager(data, manager);
     initSettings(data);

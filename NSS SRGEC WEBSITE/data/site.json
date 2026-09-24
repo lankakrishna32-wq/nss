@@ -1,113 +1,106 @@
 {
-  "version": 6,
+  "version": 7,
   "home": {
-    "established": "SRGEC NSS Unit was established to connect engineering education with community service, civic discipline, and leadership development.",
-    "year": "Institution NSS unit records are maintained by the Programme Officer and college NSS cell.",
-    "firstOfficer": "First NSS Programme Officer details can be updated from the admin settings page.",
-    "facultyCoordinator": "DR. V. Naveen Kumar",
+    "established": "Hamara Bharat is a service-oriented Non-Profitable organization built by the Founder, volunteers, and coordinators who share a lifelong commitment to serving society.",
+    "Founder": "DR. V. Naveen Kumar",
     "achievements": [
       "Organized blood donation, plantation, awareness, education, and village outreach programs.",
-      "Represented the college and university in state and national NSS camps.",
+      "Supported college and university representation in state and national service initiatives.",
       "Received appreciation from college authorities, university NSS bodies, and youth service forums."
     ],
     "awards": [
       "College-level service recognition",
       "University NSS participation appreciation",
-      "Ministry of Youth Affairs and Sports camp representation"
+      "Ministry of Youth Affairs and Sports representation"
     ]
   },
   "contact": {
-    "college": "Seshadri Rao Gudlavalleru Engineering College",
-    "address": "Gudlavalleru, Krishna District, Andhra Pradesh, India",
-    "office": "NSS Programme Officer Office, SRGEC Campus",
-    "email": "srgecnss@gmail.com",
-    "phone": "+91 9666658751",
+    "address": "--------------------",
+    "office": "Hamara Bharat Executive Office",
+    "Email": "hamarabharatyuvashakti@gmail.com",
+    "phone": "---------",
     "social": [
-      { "label": "Instagram", "url": "#" },
-      { "label": "YouTube", "url": "#" },
-      { "label": "Facebook", "url": "#" }
+      { "label": "Whatsapp Channel", "url": "https://whatsapp.com/channel/0029Vb95KtxIt5rsQPw6mZ39" },
+      { "label": "LinkedIn", "url": "https://www.linkedin.com/company/hamara-bharat/" },
+      { "label": "Facebook", "url": "https://www.facebook.com/profile.php?id=61593904245280" }
     ]
   },
   "stats": [
-    { "label": "NSS Volunteers", "value": 240, "link": null },
-    { "label": "Band Team Members", "value": 36, "link": "band-team.html" },
+    { "label": "Volunteers", "value": 240, "link": null },
     { "label": "Activities", "value": 78, "link": "activities.html" },
-    { "label": "Camps", "value": 18, "link": "camps.html" },
-    { "label": "Blood Donation Drives", "value": 12, "link": "camps.html#blood-camps" },
+    { "label": "Blood Donation Drives", "value": 12, "link": "activities.html" },
     { "label": "Awards", "value": 9, "link": null }
   ],
   "roles": [
     { "name": "Super Admin", "scope": "Full control over content, announcements, gallery, users, and settings." },
-    { "name": "Programme Officer", "scope": "Approve events, camps, volunteers, achievements, and official notices." },
-    { "name": "Student Coordinator", "scope": "Manage activity reports, volunteers, band team, and registration follow-up." },
-    { "name": "Editor", "scope": "Create drafts, update gallery records, and prepare public content." }
+    { "name": "Founder", "scope": "Approve events, volunteer applications, achievements, and official notices." },
+    { "name": "Higher Executives", "scope": "Create drafts, update gallery records, and prepare public content." }
   ],
   "announcements": [
-    "NSS volunteer registration is open for the 2026-2027 academic year.",
-    "Band team practice runs every Wednesday and Saturday at 4:30 PM.",
+    "Hamara Bharat volunteer registration is open for the ones who are interested.",
     "Tree plantation drive scheduled for the first week of September."
   ],
   "events": [
-    { "title": "Volunteer Orientation", "date": "2026-09-10", "type": "Orientation", "venue": "Seminar Hall" },
-    { "title": "Clean and Green Drive", "date": "2026-09-18", "type": "Environment", "venue": "SRGEC Campus" },
-    { "title": "Blood Donation Camp", "date": "2026-10-02", "type": "Health", "venue": "Auditorium" }
+    { "title": "Volunteer Orientation", "date": "2026-09-10", "type": "Orientation", "venue": "Will be mentioned soon." },
+    { "title": "Clean and Green Drive", "date": "2026-09-18", "type": "Environment", "venue": "Will be mentioned soon." },
+    { "title": "Blood Donation Camp", "date": "2026-10-02", "type": "Health", "venue": "Will be mentioned soon." }
   ],
   "activities": [
     {
       "title": "Blood Donation Camp",
-      "description": "A student-led blood donation drive conducted with district health officials and college medical support.",
+      "description": "A blood donation drive conducted with district health officials and medical support.",
       "date": "2026-07-14",
       "month": "July",
       "year": "2026",
-      "location": "SRGEC Auditorium",
+      "location": "Will be informed soon.",
       "category": "Health",
       "tags": ["Blood Donation", "Health", "Service"],
       "volunteers": 86,
-      "organizers": "NSS Unit and SRGEC Health Cell",
+      "organizers": "Hamara Bharat Unit.",
       "image": "https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "title": "Swachh Bharat Campus Drive",
-      "description": "Cleanliness awareness campaign and campus beautification activity inspired by Swachh Bharat Abhiyan.",
+      "description": "Cleanliness awareness campaign and village beautification activity inspired by Swachh Bharat Abhiyan.",
       "date": "2026-06-05",
       "month": "June",
       "year": "2026",
-      "location": "College Campus",
+      "location": "Villages",
       "category": "Cleanliness",
       "tags": ["Swachh Bharat", "Clean and Green"],
       "volunteers": 120,
-      "organizers": "NSS Volunteers",
+      "organizers": "Hamara Bharat team.",
       "image": "https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "title": "Tree Plantation Drive",
-      "description": "Native sapling plantation and awareness campaign for sustainable campus development.",
+      "description": "Native sapling plantation and awareness campaign for sustainable development.",
       "date": "2026-08-18",
       "month": "August",
       "year": "2026",
-      "location": "SRGEC Green Zone",
+      "location": "Villages",
       "category": "Environment",
       "tags": ["Plantation", "Environment"],
       "volunteers": 98,
-      "organizers": "NSS Unit and Eco Club",
+      "organizers": "Hamara Bharat Unit and Eco Club.",
       "image": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "title": "Awareness Rally",
-      "description": "A campus-to-community awareness rally on road safety, public health, and youth responsibility.",
+      "description": "A community awareness rally on road safety, public health, and youth responsibility.",
       "date": "2026-01-26",
       "month": "January",
       "year": "2026",
       "location": "Gudlavalleru",
       "category": "Awareness",
-      "tags": ["Rally", "Awareness", "Youth"],
+      "tags": ["Rally", "Awareness"],
       "volunteers": 112,
-      "organizers": "NSS Programme Officer and Student Coordinators",
+      "organizers": "Hamara Bharat team.",
       "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "title": "Village Education Campaign",
-      "description": "Awareness sessions on digital literacy, career guidance, and community health for nearby village students.",
+      "description": "Awareness sessions on digital literacy, career guidance, and community health for nearby village people.",
       "date": "2025-12-21",
       "month": "December",
       "year": "2025",
@@ -115,7 +108,7 @@
       "category": "Education",
       "tags": ["Village Adoption", "Education"],
       "volunteers": 64,
-      "organizers": "Programme Officer and Student Coordinators",
+      "organizers": "Hamara Bharat team.",
       "image": "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80"
     },
     {
@@ -128,274 +121,57 @@
       "category": "Health",
       "tags": ["Health Camp", "Community"],
       "volunteers": 72,
-      "organizers": "NSS Unit with local health workers",
+      "organizers": "Hamara Bharat team.",
       "image": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80"
     }
   ],
-  "camps": [
-    {
-      "name": "National Integration Camp (NIC)",
-      "location": "Mysuru",
-      "state": "Karnataka",
-      "authority": "Ministry of Youth Affairs and Sports",
-      "dates": "12 Jan 2026 - 18 Jan 2026",
-      "description": "A national camp focused on unity, cultural exchange, discipline, youth leadership, group discussion, community living, cultural presentation, and inter-state volunteer interaction.",
-      "image": "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1200&q=80"
-    },
-    {
-      "name": "National Youth Festival",
-      "location": "Nashik",
-      "state": "Maharashtra",
-      "authority": "Government of India",
-      "dates": "12 Jan 2025 - 16 Jan 2025",
-      "description": "A youth festival celebrating leadership, culture, innovation, national service, youth dialogue, social awareness exhibitions, and university representation.",
-      "image": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80"
-    },
-    {
-      "name": "Adventure Camp",
-      "location": "Manali",
-      "state": "Himachal Pradesh",
-      "authority": "Government of India",
-      "dates": "04 May 2025 - 11 May 2025",
-      "description": "Leadership training through trekking, team tasks, first-aid drills, outdoor resilience activities, discipline sessions, and personality development.",
-      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80"
-    },
-    {
-      "name": "University Special Camp",
-      "location": "Krishna District",
-      "state": "Andhra Pradesh",
-      "authority": "University NSS Cell",
-      "dates": "20 Dec 2025 - 26 Dec 2025",
-      "description": "Seven-day residential camp with rural outreach, sanitation work, education support, health awareness, household surveys, and volunteer leadership responsibilities.",
-      "image": "https://images.unsplash.com/photo-1517486808906-6ca8b3f8e1c1?auto=format&fit=crop&w=1200&q=80"
-    },
-    {
-      "name": "State NSS Camp",
-      "location": "Vijayawada",
-      "state": "Andhra Pradesh",
-      "authority": "State NSS Cell",
-      "dates": "06 Aug 2025 - 10 Aug 2025",
-      "description": "State-level leadership camp for selected NSS volunteers from affiliated colleges, including parade practice, cultural exchange, NSS reporting, and service planning.",
-      "image": "https://images.unsplash.com/photo-1528605105345-5344ea20e269?auto=format&fit=crop&w=1200&q=80"
-    },
-    {
-      "name": "Special Camp",
-      "location": "Adopted Village",
-      "state": "Andhra Pradesh",
-      "authority": "SRGEC NSS Unit",
-      "dates": "18 Dec 2026 - 24 Dec 2026",
-      "description": "Residential camp focused on sanitation, education, village survey, public awareness programs, school visits, clean drinking water awareness, and evening cultural sessions.",
-      "image": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80"
-    },
-    {
-      "name": "Pre-Republic Day Parade Camp",
-      "location": "Hyderabad",
-      "state": "Telangana",
-      "authority": "Regional Directorate of NSS",
-      "dates": "01 Nov 2026 - 10 Nov 2026",
-      "description": "Selection-oriented camp with parade training, physical fitness, cultural screening, discipline evaluation, and leadership assessment for Republic Day camp consideration.",
-      "image": "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1200&q=80"
-    },
-    {
-      "name": "Mega Blood Donation Service Camp",
-      "location": "Gudlavalleru",
-      "state": "Andhra Pradesh",
-      "authority": "SRGEC NSS Unit with District Medical Team",
-      "dates": "02 Oct 2026",
-      "description": "One-day service camp for blood donor registration, donor awareness, medical coordination, volunteer desk management, and emergency response support.",
-      "image": "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1200&q=80"
-    }
-  ],
-  "selectedStudents": [
-    {
-      "name": "Nalluri Mahesh Chowdary",
-      "branch": "Internet of Things (IoT)",
-      "year": "IV Year",
-      "batch": "2022-2024",
-      "roll": "21481A6041",
-      "camp": "National Integration Camp",
-      "university": "University NSS Cell",
-      "state": "Andhra Pradesh",
-      "status": "alumni",
-      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      "name": "Bhargav Kumar",
-      "branch": "CSE",
-      "year": "III Year",
-      "batch": "2024-2026",
-      "roll": "22486D4445",
-      "camp": "National Youth Festival",
-      "university": "University NSS Cell",
-      "state": "Andhra Pradesh",
-      "status": "alumni",
-      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      "name": "Ajay",
-      "branch": "AIML",
-      "year": "II Year",
-      "batch": "2026-2028",
-      "roll": "247790888798",
-      "camp": "State NSS Camp",
-      "university": "University NSS Cell",
-      "state": "Andhra Pradesh",
-      "status": "active",
-      "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      "name": "Raju",
-      "branch": "CSE",
-      "year": "III Year",
-      "batch": "2026-2028",
-      "roll": "2379821874",
-      "camp": "University Special Camp",
-      "university": "University NSS Cell",
-      "state": "Andhra Pradesh",
-      "status": "active",
-      "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80"
-    }
-  ],
+
   "members": [
     {
       "name": "DR. V. Naveen Kumar",
-      "role": "SRGEC NSS Programme Co-Ordinator, & Krishna District NSS Programmer Officer",
-      "designation": "Associate Professor of Physics",
-      "college": "Seshadri Rao Gudlavalleru Engineering College, Gudlavalleru, Krishna District, Andhra Pradhes, 521356",
-      "email": "srgecnss@gmail.com",
-      "phone": "+91 9666658751",
+      "role": "Hamara Bharat Founder and President",
+      "Email": "hamarabharatyuvashakti@gmail.com",
+      "phone": "----------",
       "branch": "Faculty",
-      "roll": "FACULTY-NSS",
-      "period": "Present",
       "status": "active",
-      "achievements": "District-level NSS coordination, institutional activity planning, camp guidance, volunteer mentorship, blood donation drive coordination, university reporting, and recognition for strengthening student participation in service programs.",
-      "camps": "Guided university, state, national-level camp participation, special camp planning, and selected-student preparation for Ministry of Youth Affairs and Sports programs.",
-      "bio": "Associate Professor of Physics, Seshadri Rao Gudlavalleru Engineering College, Gudlavalleru, Krishna District, Andhra Pradhes, 521356. Coordinates district-level NSS initiatives, guides volunteers, approves programs, and mentors student leadership.",
+      "achievements": "Guides service initiatives, volunteer development, community programs, and organizational planning.",
+      "camps": "Guides volunteer preparation and participation in service initiatives.",
+      "bio": "Provides mentorship and leadership for Hamara Bharat's service-oriented community work.",
       "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80"
     },
     {
       "name": "Nalluri Mahesh Chowdary",
-      "role": "NSS Student Coordinator",
-      "branch": "Internet of Things (IoT)",
-      "roll": "21481A6041",
-      "period": "2022-2024",
-      "status": "alumni",
-      "achievements": "Led volunteer mobilization, activity documentation, clean campus campaigns, awareness rallies, blood donation support, and national camp representation.",
-      "camps": "National Integration Camp, University Special Camp, leadership orientation programs, and district-level NSS meets.",
-      "bio": "Led campus programs, volunteer teams, activity reporting, event discipline, and national camp participation during the 2022-2024 term.",
+      "role": "Vice President",
+      "status": "active",
+      "achievements": "Led volunteer mobilization, activity documentation, clean-campus campaigns, awareness rallies, and blood-donation support.",
+      "bio": "Led campus programs, volunteer teams, activity reporting, and event discipline.",
       "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80"
     },
     {
       "name": "Bhargav Kumar",
-      "role": "NSS Student Coordinator",
-      "branch": "CSE",
-      "roll": "22486D4445",
-      "period": "2024-2026",
-      "status": "alumni",
-      "achievements": "Coordinates reporting, service teams, volunteer training, camp preparation, gallery documentation, event notification, and NSS Band Team support.",
-      "camps": "National Youth Festival, University Special Camp, State NSS Camp, and NSS leadership programs.",
-      "bio": "Coordinates service activities, reporting, volunteer training, event planning, band team coordination, and participation in NSS camps.",
+      "role": "Secretary",
+      "status": "active",
+      "achievements": "Coordinated reporting, service teams, volunteer training, gallery documentation, and event communication.",
+      "bio": "Coordinated service activities, reporting, volunteer training, and event planning.",
       "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
     },
     {
-      "name": "Ajay",
-      "role": "NSS Student Coordinator",
-      "branch": "AIML",
-      "roll": "247790888798",
-      "period": "2026-2028",
-      "status": "active",
-      "achievements": "Supports new volunteer engagement, leadership transition, clean and green programs, attendance tracking, event logistics, and activity planning.",
-      "camps": "State NSS Camp, University Special Camp preparation, and upcoming national camp orientation.",
-      "bio": "Supports leadership transition, volunteer engagement, public communication, service planning, and activity execution for the 2026-2028 term.",
-      "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80"
-    },
-    {
       "name": "Raju",
-      "role": "NSS Student Coordinator",
+      "role": "Student Coordinator",
       "branch": "CSE",
       "roll": "2379821874",
       "period": "2026-2028",
       "status": "active",
-      "achievements": "Supports activity coordination, volunteer communication, event execution, NSS Band Team scheduling, gallery updates, and student registration follow-up.",
-      "camps": "University Special Camp, State NSS Camp preparation, and campus-level service leadership programs.",
-      "bio": "Works with student volunteers and the NSS Band Team under Programme Officer guidance, helping the unit maintain discipline and smooth event execution.",
+      "achievements": "Supports activity coordination, volunteer communication, event execution, gallery updates, and registration follow-up.",
+      "camps": "Supports service initiatives and leadership programs.",
+      "bio": "Works with student volunteers under faculty guidance to maintain smooth event execution.",
       "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80"
     }
   ],
-  "band": {
-    "captains": [
-      {
-        "name": "K. Sai Krishna",
-        "role": "NSS Band Captain (Active)",
-        "branch": "ECE",
-        "roll": "22481A0452",
-        "period": "2024 - Present",
-        "status": "active",
-        "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-        "bio": "Leads ceremonial parade movements, rhythm coordination, instrument distribution, and official salutes during state and college events."
-      },
-      {
-        "name": "M. Tarun Kumar",
-        "role": "Former NSS Band Captain",
-        "branch": "Mechanical Engineering",
-        "roll": "20481A0318",
-        "period": "2022 - 2024",
-        "status": "alumni",
-        "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
-        "bio": "Established core drum formations, trained junior band members, and led the parade contingent during university-level celebrations."
-      }
-    ],
-    "members": [
-      { "name": "P. Rajesh", "role": "Bass Drummer", "branch": "CSE", "roll": "23481A0512", "status": "active", "image": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80" },
-      { "name": "V. Sravan", "role": "Snare Drummer", "branch": "ECE", "roll": "23481A0489", "status": "active", "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80" },
-      { "name": "T. Dinesh", "role": "Side Drummer", "branch": "EEE", "roll": "23481A0210", "status": "active", "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80" },
-      { "name": "G. Suresh", "role": "Cymbals Specialist", "branch": "IT", "roll": "23481A1205", "status": "active", "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80" },
-      { "name": "K. Anish", "role": "Trumpeter", "branch": "AIML", "roll": "23481A4212", "status": "active", "image": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80" },
-      { "name": "B. Kalyan", "role": "Bugler", "branch": "Civil", "roll": "23481A0104", "status": "active", "image": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80" },
-      { "name": "Ch. Pavan", "role": "Former Side Drummer", "branch": "ME", "roll": "21481A0342", "status": "alumni", "image": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=800&q=80" },
-      { "name": "N. Shiva", "role": "Former Bass Drummer", "branch": "ECE", "roll": "21481A0499", "status": "alumni", "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80" }
-    ],
-    "instruments": [
-      {
-        "name": "Bass Drum",
-        "category": "Percussion",
-        "image": "https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?auto=format&fit=crop&w=600&q=80",
-        "description": "Provides the heavy rhythmic pulse and march tempo for ceremonial parade formations."
-      },
-      {
-        "name": "Side / Snare Drum",
-        "category": "Percussion",
-        "image": "https://images.unsplash.com/photo-1543443374-b6fe10a6ab7b?auto=format&fit=crop&w=600&q=80",
-        "description": "Crisp, snappy rhythmic rolls, drills, and parade cadence signals."
-      },
-      {
-        "name": "Brass Cymbals",
-        "category": "Percussion",
-        "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80",
-        "description": "High-energy accent signals for march transitions, salutes, and drill climaxes."
-      },
-      {
-        "name": "Bugle & Trumpet",
-        "category": "Brass Wind",
-        "image": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80",
-        "description": "Ceremonial fanfares, official honors, and national anthem accompaniment."
-      },
-      {
-        "name": "Marching Flute",
-        "category": "Woodwind",
-        "image": "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=600&q=80",
-        "description": "Melodic march themes during ceremonial parade movements."
-      }
-    ]
-  },
   "gallery": [
-    { "title": "Campus Rally", "type": "Photo", "year": "2026", "album": "Awareness", "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80" },
+    { "title": "Rally", "type": "Photo", "year": "2026", "album": "Awareness", "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80" },
     { "title": "Plantation Day", "type": "Photo", "year": "2026", "album": "Environment", "image": "https://images.unsplash.com/photo-1525026198548-4baa812f1183?auto=format&fit=crop&w=1200&q=80" },
-    { "title": "Band Practice", "type": "Video", "year": "2026", "album": "Band Team", "image": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1200&q=80" },
-    { "title": "Special Camp", "type": "Photo", "year": "2025", "album": "Camps", "image": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80" },
     { "title": "Blood Donation", "type": "Photo", "year": "2026", "album": "Health", "image": "https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1200&q=80" },
-    { "title": "Volunteer Orientation", "type": "Video", "year": "2026", "album": "College Events", "image": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80" }
-  ],
-  "registrations": [],
-  "uploads": []
+    { "title": "Volunteer Orientation", "type": "Video", "year": "2026", "album": "Events", "image": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80" }
+  ]
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Manage Members | SRGEC NSS Admin</title>
+  <title>Manage Core Team | Hamara Bharat Admin</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/admin.css">
 </head>
@@ -11,19 +11,17 @@
   <div class="admin-layout">
     <aside class="admin-sidebar">
       <a class="brand" href="/index.html">
-        <span class="logo">NSS</span>
+        <img src="/images/Logo.jpeg" alt="Hamara Bharat Logo" class="logo-img">
         <span>
-          <strong>SRGEC NSS</strong>
+          <strong>Hamara Bharat</strong>
           <span>Admin Panel</span>
         </span>
       </a>
       <nav class="admin-nav" data-admin-nav>
         <a href="/admin/dashboard.html">Dashboard</a>
         <a href="/admin/activities.html">Activities</a>
-        <a href="/admin/camps.html">Camps</a>
-        <a href="/admin/members.html">Members</a>
-        <a href="/admin/band-captains.html">Band Captains</a>
-        <a href="/admin/band.html">Band Team</a>
+        <a href="/admin/members.html">Core Team</a>
+        <a href="/admin/volunteers.html">Volunteers</a>
         <a href="/admin/gallery.html">Gallery</a>
         <a href="/admin/settings.html">Settings</a>
       </nav>
@@ -32,9 +30,12 @@
       <div class="admin-top">
         <div>
           <span class="eyebrow">CMS</span>
-          <h1>Members and Coordinators</h1>
+          <h1>Core Team Management</h1>
         </div>
         <button class="btn ghost" data-logout>Logout</button>
+      </div>
+      <div class="card card-body" style="margin-bottom: 24px;">
+        <p style="color: var(--muted); line-height: 1.6;">Add, edit, or remove Core Team profiles. Saved changes are published to the Core Team page, including each member's full profile details.</p>
       </div>
       <div class="grid cols-2">
         <form class="card card-body admin-form" data-manager-form></form>
@@ -42,10 +43,75 @@
       </div>
     </main>
   </div>
-  <!-- Firebase App & Firestore SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
-  <script src="/js/firebase-config.js"></script>
+  
   <script src="/js/admin.js"></script>
+    <script>
+        // Keep the Core Team editor focused on the details displayed on the public site.
+        document.addEventListener('DOMContentLoaded', () => {
+            const getFieldGroup = (field) => field?.closest('.form-group, .form-field, .field-group, .input-group') || field?.parentElement;
+            const roleField = document.querySelector('[name="role"], #role');
+            const designationField = document.querySelector('[name="designation"], #designation');
+            const roleGroup = getFieldGroup(roleField);
+            const designationGroup = getFieldGroup(designationField);
+
+            if (roleGroup && designationGroup && roleGroup.parentElement === designationGroup.parentElement) {
+                roleGroup.parentElement.insertBefore(designationGroup, roleGroup);
+            }
+
+            ['branch', 'roll', 'rollNumber', 'period', 'college', 'camp', 'camps'].forEach((fieldName) => {
+                document.querySelectorAll(`[name="${fieldName}"], #${fieldName}`).forEach((field) => {
+                    field.value = '';
+                    const group = getFieldGroup(field);
+                    if (group) group.remove();
+                });
+            });
+        });
+    </script>
+    <script>
+        // The member form is rendered dynamically, so apply these changes whenever it updates.
+        (() => {
+            const unwantedFields = /^(branch|roll(number)?|period|college|camps?)$/i;
+            const fieldGroup = (element) => element?.closest('.form-group, .form-field, .field-group, .input-group, .form-row > div, .field') || element?.parentElement;
+
+            const fieldLabel = (element) => {
+                const linkedLabel = element.id && document.querySelector(`label[for="${element.id}"]`);
+                return [
+                    element.name,
+                    element.id,
+                    element.placeholder,
+                    element.getAttribute('aria-label'),
+                    linkedLabel?.textContent,
+                    element.closest('label')?.textContent,
+                    element.previousElementSibling?.textContent
+                ].filter(Boolean).join(' ').replace(/\s+/g, '').toLowerCase();
+            };
+
+            const isUnwantedField = (element) => {
+                const linkedLabel = element.id && document.querySelector(`label[for="${element.id}"]`);
+                return [element.name, element.id, element.placeholder, element.getAttribute('aria-label'), linkedLabel?.textContent]
+                    .filter(Boolean)
+                    .some((value) => unwantedFields.test(String(value).toLowerCase().replace(/[^a-z]/g, '')));
+            };
+
+            const cleanCoreTeamForm = () => {
+                document.querySelectorAll('input, select, textarea').forEach((element) => {
+                    if (!isUnwantedField(element)) return;
+                    fieldGroup(element)?.remove();
+                });
+
+                const role = document.querySelector('[name="role"], #role, [name="position"], #position');
+                const designation = document.querySelector('[name="designation"], #designation');
+                const roleGroup = fieldGroup(role);
+                const designationGroup = fieldGroup(designation);
+                if (roleGroup && designationGroup && roleGroup.parentElement === designationGroup.parentElement
+                    && designationGroup.nextElementSibling !== roleGroup) {
+                    roleGroup.parentElement.insertBefore(designationGroup, roleGroup);
+                }
+            };
+
+            cleanCoreTeamForm();
+            new MutationObserver(cleanCoreTeamForm).observe(document.body, { childList: true, subtree: true });
+        })();
+    </script>
 </body>
 </html>

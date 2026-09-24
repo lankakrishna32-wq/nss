@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteers | Hamara Bharat</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .volunteers-directory {
+            max-width: none;
+            margin: 0;
+            padding: 0 0 80px;
+            background: #111827;
+        }
+        .volunteers-directory__intro {
+            max-width: none;
+            margin: 0 0 52px;
+            padding: 96px 24px;
+            text-align: center;
+            background: #111827;
+        }
+        .volunteers-directory__intro .section-tag {
+            display: inline-block;
+            margin: 0 0 18px;
+            padding: 9px 16px;
+            border: 1px solid rgba(255, 122, 0, 0.38);
+            border-radius: 999px;
+            color: var(--orange);
+            background: rgba(255, 122, 0, 0.08);
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .volunteers-directory__intro h1 { margin: 0 0 18px; }
+        .volunteers-directory__intro p { max-width: 760px; margin: 0 auto; color: var(--text-secondary); }
+        .volunteers-directory__list {
+            width: min(1080px, calc(100% - 48px));
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 24px;
+        }
+        .volunteer-name { padding: 20px; border: 1px solid var(--border); border-top: 3px solid var(--orange); border-radius: 16px; background: var(--card-bg); color: var(--text-primary); font-weight: 700; }
+        .volunteers-directory__empty { grid-column: 1 / -1; padding: 30px; border: 1px solid var(--border); border-radius: 16px; color: var(--text-secondary); text-align: center; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a class="logo" href="index.html">Hamara Bharat</a>
+        <nav class="nav-links" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="activities.html">Activities</a>
+            <a href="core-team.html">NSS Core Team</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <main class="volunteers-directory">
+        <section class="volunteers-directory__intro">
+            <span class="section-tag">Our Community</span>
+            <h1>Volunteers</h1>
+            <p>Only registrations accepted by the admin team are shown here. If you recently registered, please allow time for verification.</p>
+        </section>
+        <section id="volunteersList" class="volunteers-directory__list" aria-live="polite">
+            <p class="volunteers-directory__empty">Loading volunteers…</p>
+        </section>
+    </main>
+
+    <script src="js/script.js"></script>
+    <script>
+        (async function loadApprovedVolunteers() {
+            const list = document.getElementById('volunteersList');
+            try {
+                const response = await fetch('/api/site-data');
+                if (!response.ok) throw new Error('Unable to load volunteers');
+                const payload = await response.json();
+                const volunteers = Array.isArray(payload.volunteers)
+                    ? payload.volunteers
+                    : (payload.data && Array.isArray(payload.data.volunteers) ? payload.data.volunteers : []);
+
+                list.innerHTML = '';
+                if (!volunteers.length) {
+                    list.innerHTML = '<p class="volunteers-directory__empty">No volunteers have been approved yet.</p>';
+                    return;
+                }
+
+                volunteers.forEach((volunteer) => {
+                    const name = typeof volunteer === 'string'
+                        ? volunteer
+                        : (volunteer.name || volunteer.fullName || 'Volunteer');
+                    const card = document.createElement('article');
+                    card.className = 'volunteer-name';
+                    card.textContent = name;
+                    list.appendChild(card);
+                });
+            } catch (error) {
+                // A second loader below tries the remaining public data sources.
+            }
+        })();
+    </script>
+    <script src="js/volunteers-nav.js"></script>
+    <script src="js/slider.js"></script>
+    <script>
+        (async function useSharedHeader() {
+            try {
+                const response = await fetch('index.html');
+                if (!response.ok) return;
+
+                const indexDocument = new DOMParser().parseFromString(await response.text(), 'text/html');
+                const sharedHeader = indexDocument.querySelector('header');
+                const currentHeader = document.querySelector('header');
+                if (!sharedHeader || !currentHeader) return;
+
+                currentHeader.replaceWith(sharedHeader.cloneNode(true));
+                const header = document.querySelector('header');
+                const activities = Array.from(header.querySelectorAll('a'))
+                    .find((link) => link.textContent.trim().toLowerCase() === 'activities');
+                if (activities && !header.querySelector('a[href="volunteers.html"]')) {
+                    const volunteers = document.createElement('a');
+                    volunteers.href = 'volunteers.html';
+                    volunteers.textContent = 'Volunteers';
+                    volunteers.className = activities.className;
+                    activities.parentElement.insertBefore(volunteers, activities);
+                }
+            } catch (error) {
+                console.warn('Shared header could not be loaded.', error);
+            }
+        })();
+
+        // The Home page builds its header dynamically. Clone that rendered header so this
+        // page always uses the exact same markup, logo, spacing, and navigation styling.
+        (function cloneRenderedHomeHeader() {
+            const headerFrame = document.createElement('iframe');
+            headerFrame.src = 'index.html';
+            headerFrame.setAttribute('aria-hidden', 'true');
+            headerFrame.style.cssText = 'position:absolute;width:1px;height:1px;border:0;opacity:0;pointer-events:none;';
+
+            headerFrame.addEventListener('load', () => {
+                try {
+                    const renderedHeader = headerFrame.contentDocument.querySelector('header');
+                    const renderedFooter = headerFrame.contentDocument.querySelector('footer');
+                    const currentHeader = document.querySelector('header');
+                    if (!renderedHeader || !currentHeader) return;
+
+                    currentHeader.replaceWith(renderedHeader.cloneNode(true));
+                    const header = document.querySelector('header');
+                    const activities = Array.from(header.querySelectorAll('a'))
+                        .find((link) => link.textContent.trim().toLowerCase() === 'activities');
+                    if (activities && !header.querySelector('a[href="volunteers.html"]')) {
+                        const volunteers = document.createElement('a');
+                        volunteers.href = 'volunteers.html';
+                        volunteers.textContent = 'Volunteers';
+                        volunteers.className = activities.className;
+                        activities.parentElement.insertBefore(volunteers, activities);
+                    }
+
+                    if (renderedFooter) {
+                        document.querySelector('body > footer')?.remove();
+                        document.body.appendChild(renderedFooter.cloneNode(true));
+                    }
+                    headerFrame.remove();
+                } catch (error) {
+                    headerFrame.remove();
+                }
+            });
+            document.body.appendChild(headerFrame);
+        })();
+
+        (async function loadApprovedVolunteerNames() {
+            const list = document.getElementById('volunteersList');
+            const sources = ['/api/site-data', '/api/data', '/api/volunteers', '/api/registrations', 'site.json'];
+
+            for (const source of sources) {
+                try {
+                    const response = await fetch(source);
+                    if (!response.ok) continue;
+                    const payload = await response.json();
+                    const records = Array.isArray(payload)
+                        ? payload
+                        : (payload.volunteers || payload.registrations || payload.data?.volunteers || payload.data?.registrations || (Array.isArray(payload.data) ? payload.data : []));
+                    if (!Array.isArray(records)) continue;
+
+                    const approved = records.filter((volunteer) => {
+                        if (typeof volunteer === 'string' || volunteer.status === undefined) return true;
+                        const status = String(volunteer.status || volunteer.registrationStatus || '').toLowerCase();
+                        return volunteer.approved === true
+                            || volunteer.isApproved === true
+                            || ['approved', 'accepted', 'active', 'verified'].includes(status);
+                    });
+
+                    list.innerHTML = '';
+                    if (!approved.length) {
+                        continue;
+                    }
+
+                    approved.forEach((volunteer) => {
+                        const card = document.createElement('article');
+                        card.className = 'volunteer-name';
+                        card.textContent = typeof volunteer === 'string'
+                            ? volunteer
+                            : (volunteer.name || volunteer.fullName || 'Volunteer');
+                        list.appendChild(card);
+                    });
+                    return;
+                } catch (error) {
+                    // Try the next public data source without exposing registration details.
+                }
+            }
+
+            list.innerHTML = '<p class="volunteers-directory__empty">No volunteers have been approved yet.</p>';
+        })();
+    </script>
+    <script>
+        // This page must be the only active item after the shared Home header is inserted.
+        (() => {
+            const markVolunteersActive = () => {
+                const header = document.querySelector('header');
+                const volunteers = header?.querySelector('a[href="volunteers.html"]');
+                if (!header || !volunteers) return;
+                header.querySelectorAll('a').forEach((link) => {
+                    link.classList.remove('active');
+                    link.removeAttribute('aria-current');
+                });
+                volunteers.classList.add('active');
+                volunteers.setAttribute('aria-current', 'page');
+            };
+
+            markVolunteersActive();
+            new MutationObserver(markVolunteersActive).observe(document.body, { childList: true });
+        })();
+    </script>
+    <script src="js/footer-socials.js"></script>
+</body>
+</html>

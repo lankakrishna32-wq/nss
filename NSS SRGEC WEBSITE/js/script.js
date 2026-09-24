@@ -3,11 +3,9 @@ const REQUIRED_DATA_VERSION = 6;
 
 const navItems = [
   ["Home", "index.html"],
-  ["About NSS", "about.html"],
-  ["NSS Activities", "activities.html"],
-  ["NSS Band Team", "band-team.html"],
-  ["Camps", "camps.html"],
-  ["NSS Core Team", "core-team.html"],
+  ["About Us", "about.html"],
+  ["Activities", "activities.html"],
+  ["Core Team", "core-team.html"],
   ["Gallery", "gallery.html"],
   ["Contact", "contact.html"]
 ];
@@ -115,6 +113,15 @@ function formatDate(dateStr) {
   return d.toLocaleString("en-IN", { month: "short", year: "numeric", day: "2-digit" });
 }
 
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1]);
+    reader.onerror = () => reject(new Error("Could not read the selected PDF."));
+    reader.readAsDataURL(file);
+  });
+}
+
 function initShell() {
   document.documentElement.dataset.theme = localStorage.getItem("srgecTheme") || "dark";
   const page = document.body.dataset.page || "index.html";
@@ -194,32 +201,11 @@ function observeReveals() {
 
 // Render Core Team (Programme Officer Side-by-Side + Compact Cards + Profile Modal)
 function renderCoreTeam(members) {
-  const poWrap = document.querySelector("[data-po-member]");
   const membersWrap = document.querySelector("[data-members]");
-  if (!membersWrap && !poWrap) return;
+  if (!membersWrap) return;
 
   const po = members.find(m => m.role.includes("Programme Officer") || m.branch === "Faculty");
   const studentCoordinators = members.filter(m => m !== po);
-
-  if (poWrap && po) {
-    poWrap.innerHTML = `
-      <div class="po-profile-card card reveal" onclick="showMemberModal('${escapeHtml(po.name)}')">
-        <img src="${po.image}" alt="${escapeHtml(po.name)}" class="po-profile-img">
-        <div class="po-profile-info">
-          <span class="status-tag active" style="margin-bottom: 8px;">Programme Officer</span>
-          <h3 class="po-name">${escapeHtml(po.name)}</h3>
-          <div class="po-role">${escapeHtml(po.role)}</div>
-          <p class="po-college"><strong>Department:</strong> ${escapeHtml(po.designation || 'Associate Professor of Physics')}</p>
-          <p class="po-address">${escapeHtml(po.college || 'Seshadri Rao Gudlavalleru Engineering College, Gudlavalleru, Krishna District, AP 521356')}</p>
-          <div class="po-contacts">
-            <span>✉️ <strong>Email:</strong> <a href="mailto:${escapeHtml(po.email || 'srgecnss@gmail.com')}" style="color: var(--orange);">${escapeHtml(po.email || 'srgecnss@gmail.com')}</a></span>
-            <span>📞 <strong>Contact No:</strong> ${escapeHtml(po.phone || '+91 9666658751')}</span>
-          </div>
-          <span class="click-hint" style="opacity: 1; transform: none; margin-top: 12px;">Click profile for full details &rarr;</span>
-        </div>
-      </div>
-    `;
-  }
 
   // Active / Alumni Tab Logic
   const tabsContainer = document.querySelector("[data-team-tabs]");
@@ -284,7 +270,7 @@ window.showMemberModal = function(memberName) {
             ${m.designation ? `<strong>Designation:</strong> ${escapeHtml(m.designation)}<br>` : ''}
             ${m.branch && m.branch !== 'Faculty' ? `<strong>Branch:</strong> ${escapeHtml(m.branch)}<br>` : ''}
             ${m.roll ? `<strong>Roll No:</strong> ${escapeHtml(m.roll)}<br>` : ''}
-            ${m.email ? `<strong>Email:</strong> ${escapeHtml(m.email)}<br>` : ''}
+            ${m.Email ? `<strong>Email:</strong> ${escapeHtml(m.Email)}<br>` : ''}
             ${m.phone ? `<strong>Contact:</strong> ${escapeHtml(m.phone)}<br>` : ''}
             ${m.period ? `<strong>Term:</strong> ${escapeHtml(m.period)}` : ''}
           </div>
@@ -318,11 +304,39 @@ window.showMemberModal = function(memberName) {
 };
 
 // Render Stats Counters with Interactive Links
-function renderStats(stats) {
+function renderStats(data) {
   const wrap = document.querySelector("[data-stats]");
+  const stats = data && data.stats;
   if (!wrap || !stats) return;
 
-  wrap.innerHTML = stats.map(s => {
+  const activities = Array.isArray(data.activities) ? data.activities : [];
+  const approvedVolunteerCount = Array.isArray(data.volunteers) ? data.volunteers.length : 0;
+  const bloodDonationCount = activities.filter(activity => {
+    const searchable = [
+      activity.title,
+      activity.description,
+      activity.category,
+      ...(Array.isArray(activity.tags) ? activity.tags : [])
+    ].join(" ").toLowerCase();
+    return searchable.includes("blood donation");
+  }).length;
+  const visibleStats = stats
+    .filter(s => String(s.label || "").trim().toLowerCase() !== "camps")
+    .map(s => {
+      const label = String(s.label || "").trim().toLowerCase();
+      if (label === "volunteers" || label === "nss volunteers") {
+        return { ...s, label: "Volunteers", value: approvedVolunteerCount };
+      }
+      if (label === "activities") {
+        return { ...s, value: activities.length };
+      }
+      if (label === "blood donation drives") {
+        return { ...s, value: bloodDonationCount };
+      }
+      return s;
+    });
+
+  wrap.innerHTML = visibleStats.map(s => {
     if (s.link) {
       return `
         <a href="${s.link}" class="stat-card clickable reveal" style="display: block; text-decoration: none;">
@@ -449,103 +463,6 @@ window.showActivityModal = function(index) {
   openModal(html);
 };
 
-// Render Camps Section
-function renderCamps(camps) {
-  const wrap = document.querySelector("[data-camps]");
-  if (!wrap || !camps) return;
-
-  wrap.innerHTML = camps.map((c, idx) => `
-    <div class="card reveal" style="cursor: pointer;" onclick="showCampModal(${idx})">
-      <img src="${c.image}" alt="${escapeHtml(c.name)}" class="card-media">
-      <div class="card-body">
-        <span class="status-tag active" style="margin-bottom: 8px;">${escapeHtml(c.state)}</span>
-        <h3 style="font-size: 1.15rem; margin-bottom: 6px;">${escapeHtml(c.name)}</h3>
-        <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 10px;">📍 ${escapeHtml(c.location)} &bull; 🗓️ ${escapeHtml(c.dates)}</p>
-        <p style="font-size: 0.9rem; color: var(--text); margin-bottom: 12px;">${escapeHtml(c.description.substring(0, 90))}...</p>
-        <span class="click-hint" style="opacity: 1; transform: none;">View Camp Details &rarr;</span>
-      </div>
-    </div>
-  `).join("");
-
-  window._siteCamps = camps;
-}
-
-window.showCampModal = function(index) {
-  const camps = window._siteCamps || [];
-  const c = camps[index];
-  if (!c) return;
-
-  const html = `
-    <div style="padding: 28px;">
-      <img src="${c.image}" alt="${escapeHtml(c.name)}" style="width: 100%; height: 260px; object-fit: cover; border-radius: var(--radius); margin-bottom: 20px;">
-      <span class="status-tag active" style="margin-bottom: 8px;">${escapeHtml(c.state)}</span>
-      <h2 style="font-size: 1.7rem; margin: 8px 0 12px;">${escapeHtml(c.name)}</h2>
-      <p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 16px;">
-        📍 <strong>Location:</strong> ${escapeHtml(c.location)} &bull; 🗓️ <strong>Dates:</strong> ${escapeHtml(c.dates)}
-      </p>
-      <div style="margin-bottom: 20px; line-height: 1.7; color: var(--text);">
-        <p>${escapeHtml(c.description)}</p>
-      </div>
-      <div style="background: var(--bg-alt); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
-        <strong>Organizing Authority:</strong> ${escapeHtml(c.authority)}
-      </div>
-    </div>
-  `;
-  openModal(html);
-};
-
-// Render Selected Students (Compact Cards & Modals)
-function renderSelectedStudents(students) {
-  const wrap = document.querySelector("[data-selected-students]");
-  if (!wrap || !students) return;
-
-  wrap.innerHTML = students.map((s, idx) => `
-    <div class="member-card-compact reveal" onclick="showStudentModal(${idx})">
-      <span class="status-tag ${s.status === 'alumni' ? 'alumni' : 'active'}">${s.status === 'alumni' ? 'Alumni' : 'Active'}</span>
-      <img src="${s.image}" alt="${escapeHtml(s.name)}" class="member-avatar">
-      <h3 class="member-name">${escapeHtml(s.name)}</h3>
-      <div class="member-role">${escapeHtml(s.camp)}</div>
-      <div class="member-period">${escapeHtml(s.batch)} &bull; ${escapeHtml(s.branch)}</div>
-      <span class="click-hint">View Selection &rarr;</span>
-    </div>
-  `).join("");
-
-  window._selectedStudents = students;
-}
-
-window.showStudentModal = function(idx) {
-  const students = window._selectedStudents || [];
-  const s = students[idx];
-  if (!s) return;
-
-  const html = `
-    <div class="profile-modal-body">
-      <div class="profile-modal-header">
-        <img src="${s.image}" alt="${escapeHtml(s.name)}" class="profile-modal-img">
-        <div class="profile-modal-meta">
-          <span class="status-tag ${s.status === 'alumni' ? 'alumni' : 'active'}" style="margin-bottom: 8px;">
-            National / State Camp Representative
-          </span>
-          <h2>${escapeHtml(s.name)}</h2>
-          <div class="role">${escapeHtml(s.camp)}</div>
-          <div class="details">
-            <strong>Branch:</strong> ${escapeHtml(s.branch)} (${escapeHtml(s.year)})<br>
-            <strong>Roll No:</strong> ${escapeHtml(s.roll)}<br>
-            <strong>Batch:</strong> ${escapeHtml(s.batch)}
-          </div>
-        </div>
-      </div>
-      <div class="profile-section">
-        <h4>Camp & Representation Details</h4>
-        <p><strong>Camp Attended:</strong> ${escapeHtml(s.camp)}</p>
-        <p><strong>University Represented:</strong> ${escapeHtml(s.university)}</p>
-        <p><strong>State Represented:</strong> ${escapeHtml(s.state)}</p>
-      </div>
-    </div>
-  `;
-  openModal(html);
-};
-
 // Render Gallery Masonry
 function renderGallery(gallery) {
   const wrap = document.querySelector("[data-gallery]");
@@ -555,7 +472,10 @@ function renderGallery(gallery) {
   const yearFilter = document.querySelector("[data-gallery-year-filter]");
   const typeFilter = document.querySelector("[data-type-filter]");
 
-  const albums = [...new Set(gallery.map(g => g.album))].sort();
+  const hiddenAlbumFilters = new Set(["Band Team", "Camps", "College Events"]);
+  const albums = [...new Set(gallery.map(g => g.album))]
+    .filter(album => !hiddenAlbumFilters.has(album))
+    .sort();
   const years = [...new Set(gallery.map(g => g.year))].sort((a, b) => b - a);
 
   if (albumFilter) {
@@ -609,121 +529,6 @@ window.showGalleryLightbox = function(idx) {
   openModal(html);
 };
 
-// Render Band Team (Instruments Inventory, Captain Portfolio, Members Portfolio)
-function renderBand(band) {
-  if (!band) return;
-
-  // 1. Instruments Inventory
-  const instrumentsWrap = document.querySelector("[data-band-instruments]");
-  if (instrumentsWrap && band.instruments) {
-    instrumentsWrap.innerHTML = band.instruments.map(inst => `
-      <div class="card instrument-card reveal">
-        <img src="${inst.image}" alt="${escapeHtml(inst.name)}" class="instrument-img">
-        <div class="card-body" style="padding: 20px;">
-          <span class="eyebrow" style="margin-bottom: 6px;">${escapeHtml(inst.category)}</span>
-          <h3 style="font-size: 1.15rem; margin-bottom: 8px; color: var(--text);">${escapeHtml(inst.name)}</h3>
-          <p style="color: var(--muted); font-size: 0.88rem; line-height: 1.5;">${escapeHtml(inst.description)}</p>
-        </div>
-      </div>
-    `).join("");
-  }
-
-  // 2. Band Captains Portfolio (Active & Alumni)
-  const captainsWrap = document.querySelector("[data-band-captains]");
-  const captainTabsWrap = document.querySelector("[data-captain-tabs]");
-  if (captainsWrap && band.captains) {
-    let activeCapTab = "active";
-
-    const renderCaptains = (statusFilter) => {
-      const filteredCaptains = band.captains.filter(c => (c.status || "active") === statusFilter);
-      if (filteredCaptains.length === 0) {
-        captainsWrap.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--muted);">No captain records found.</p>`;
-        return;
-      }
-
-      captainsWrap.innerHTML = filteredCaptains.map(c => `
-        <div class="card reveal" style="padding: 24px; display: flex; gap: 20px; align-items: center;">
-          <img src="${c.image}" alt="${escapeHtml(c.name)}" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid var(--orange); flex-shrink: 0;">
-          <div>
-            <span class="status-tag ${c.status === 'alumni' ? 'alumni' : 'active'}" style="margin-bottom: 6px;">${c.status === 'alumni' ? 'Former Captain' : 'Active Captain'}</span>
-            <h3 style="font-size: 1.25rem; margin-bottom: 4px;">${escapeHtml(c.name)}</h3>
-            <p style="color: var(--orange); font-weight: 600; font-size: 0.9rem; margin-bottom: 6px;">${escapeHtml(c.role)}</p>
-            <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 4px;"><strong>Branch:</strong> ${escapeHtml(c.branch)} &bull; <strong>Roll:</strong> ${escapeHtml(c.roll)}</p>
-            <p style="color: var(--muted); font-size: 0.85rem;"><strong>Term:</strong> ${escapeHtml(c.period)}</p>
-          </div>
-        </div>
-      `).join("");
-      observeReveals();
-    };
-
-    if (captainTabsWrap) {
-      captainTabsWrap.innerHTML = `
-        <div class="tabs-header">
-          <button class="tab-btn active" data-captab="active">Active Captain</button>
-          <button class="tab-btn" data-captab="alumni">Former / Alumni Captains</button>
-        </div>
-      `;
-
-      captainTabsWrap.querySelectorAll("[data-captab]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          captainTabsWrap.querySelectorAll("[data-captab]").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          activeCapTab = btn.dataset.captab;
-          renderCaptains(activeCapTab);
-        });
-      });
-    }
-
-    renderCaptains(activeCapTab);
-  }
-
-  // 3. Band Members Portfolio (Active & Alumni)
-  const bandMembersWrap = document.querySelector("[data-band-members]");
-  const bandTabsWrap = document.querySelector("[data-band-tabs]");
-  if (bandMembersWrap && band.members) {
-    let activeBandTab = "active";
-
-    const renderMembers = (statusFilter) => {
-      const filteredMembers = band.members.filter(m => (m.status || "active") === statusFilter);
-      if (filteredMembers.length === 0) {
-        bandMembersWrap.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--muted);">No member records found.</p>`;
-        return;
-      }
-
-      bandMembersWrap.innerHTML = filteredMembers.map(m => `
-        <div class="member-card-compact reveal">
-          <span class="status-tag ${m.status === 'alumni' ? 'alumni' : 'active'}">${m.status === 'alumni' ? 'Alumni' : 'Active'}</span>
-          <img src="${m.image}" alt="${escapeHtml(m.name)}" class="member-avatar">
-          <h3 class="member-name">${escapeHtml(m.name)}</h3>
-          <div class="member-role">${escapeHtml(m.role)}</div>
-          <div class="member-period">Roll: ${escapeHtml(m.roll)} &bull; ${escapeHtml(m.branch)}</div>
-        </div>
-      `).join("");
-      observeReveals();
-    };
-
-    if (bandTabsWrap) {
-      bandTabsWrap.innerHTML = `
-        <div class="tabs-header">
-          <button class="tab-btn active" data-bandtab="active">Current Active Band Team</button>
-          <button class="tab-btn" data-bandtab="alumni">Former / Alumni Band Team</button>
-        </div>
-      `;
-
-      bandTabsWrap.querySelectorAll("[data-bandtab]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          bandTabsWrap.querySelectorAll("[data-bandtab]").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          activeBandTab = btn.dataset.bandtab;
-          renderMembers(activeBandTab);
-        });
-      });
-    }
-
-    renderMembers(activeBandTab);
-  }
-}
-
 // Render Upcoming Events Calendar Cards
 function renderEvents(events) {
   const wrap = document.querySelector("[data-events]");
@@ -767,8 +572,29 @@ function initRegistrations(data) {
 
       try {
         const formData = Object.fromEntries(
-          new FormData(form).entries()
+          [...new FormData(form).entries()].filter(([, value]) => typeof value === "string")
         );
+
+        const aadhaarFile = form.querySelector('input[name="aadhaarCard"]')?.files?.[0];
+        if (aadhaarFile) {
+          const allowedTypes = new Set(["application/pdf", "image/jpeg", "image/png", "image/webp"]);
+          const allowedExtensions = /\.(pdf|jpe?g|png|webp)$/i;
+          const maxFileSize = 500 * 1024;
+
+          if (!allowedTypes.has(aadhaarFile.type) && !allowedExtensions.test(aadhaarFile.name)) {
+            throw new Error("Please upload your Aadhaar card as a PDF, JPG, PNG, or WebP file.");
+          }
+          if (aadhaarFile.size > maxFileSize) {
+            throw new Error("The Aadhaar card file must be 500 KB or smaller.");
+          }
+
+          formData.aadhaarCard = {
+            fileName: aadhaarFile.name,
+            mimeType: aadhaarFile.type || "application/octet-stream",
+            size: aadhaarFile.size,
+            data: await readFileAsBase64(aadhaarFile)
+          };
+        }
 
         formData.type = form.dataset.registrationForm;
         formData.createdAt = new Date().toISOString();
@@ -802,8 +628,7 @@ function initRegistrations(data) {
         console.error("Registration submission error:", error);
 
         if (statusEl) {
-          statusEl.textContent =
-            "Registration submission failed. Please try again.";
+          statusEl.textContent = error.message || "Registration submission failed. Please try again.";
           statusEl.style.color = "red";
         }
 
@@ -819,13 +644,10 @@ function initRegistrations(data) {
 
 function renderAllComponents(data) {
   if (!data) return;
-  renderStats(data.stats);
+  renderStats(data);
   renderCoreTeam(data.members);
   renderActivityCards(data);
-  renderCamps(data.camps);
-  renderSelectedStudents(data.selectedStudents);
   renderGallery(data.gallery);
-  renderBand(data.band);
   renderEvents(data.events);
   observeReveals();
 }
@@ -839,3 +661,101 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderAllComponents(data);
   initRegistrations(data);
 })
+// Make the public Volunteers directory available from every main-site navigation menu.
+(() => {
+    const addVolunteersLink = () => {
+        document.querySelectorAll('a[href*="activities"], a[href="#activities"]').forEach((activities) => {
+            const nav = activities.closest('nav, .nav-links, .navbar, .navigation') || activities.parentElement;
+            if (!nav || nav.querySelector('a[href="volunteers.html"]')) return;
+            const link = document.createElement('a');
+            link.href = 'volunteers.html';
+            link.textContent = 'Volunteers';
+            link.className = activities.className;
+            link.classList.remove('active');
+            link.removeAttribute('aria-current');
+            nav.insertBefore(link, activities);
+        });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', addVolunteersLink);
+    } else {
+        addVolunteersLink();
+    }
+})();
+// Add the Contact-page social links to the footer's Hamara Bharat Office section.
+(() => {
+    const socialDefinitions = [
+        { key: 'whatsapp', label: 'WhatsApp Channel', symbol: '◉' },
+        { key: 'linkedin', label: 'LinkedIn', symbol: 'in' },
+        { key: 'facebook', label: 'Facebook', symbol: 'f' }
+    ];
+
+    const createSocialBlock = (footer, links) => {
+        if (!footer || footer.querySelector('.footer-social-media')) return;
+        const officeHeading = Array.from(footer.querySelectorAll('h1, h2, h3, h4, h5, h6, strong, b'))
+            .find((element) => /hamara bharat office/i.test(element.textContent));
+        const block = document.createElement('div');
+        block.className = 'footer-social-media';
+        block.innerHTML = '<p>Follow Us</p><div class="footer-social-media__links"></div>';
+        const container = block.querySelector('.footer-social-media__links');
+
+        socialDefinitions.forEach((social) => {
+            const source = links.find((link) => link.key === social.key);
+            const anchor = document.createElement('a');
+            if (!source?.href) return;
+            anchor.href = source.href;
+            anchor.target = '_blank';
+            anchor.rel = 'noopener noreferrer';
+            anchor.className = `footer-social-media__link footer-social-media__link--${social.key}`;
+            anchor.setAttribute('aria-label', social.label);
+            anchor.textContent = social.symbol;
+            container.appendChild(anchor);
+        });
+
+        const officeColumn = officeHeading?.parentElement;
+        const locationLine = officeColumn && Array.from(officeColumn.querySelectorAll('p, div, span'))
+            .find((element) => element.children.length === 0 && /^location:/i.test(element.textContent.trim()));
+        if (locationLine) {
+            locationLine.insertAdjacentElement('afterend', block);
+        } else if (officeHeading) {
+            officeHeading.parentElement.appendChild(block);
+        } else {
+            footer.appendChild(block);
+        }
+    };
+
+    const socialLinksFrom = (documentToRead) => socialDefinitions.map((social) => {
+        const anchor = Array.from(documentToRead.querySelectorAll('a')).find((link) =>
+            link.textContent.toLowerCase().includes(social.key)
+        );
+        return { key: social.key, href: anchor?.href };
+    });
+
+    const addFooterSocials = async () => {
+        const footer = document.querySelector('footer');
+        if (!footer) return;
+        let links = socialLinksFrom(document);
+        if (links.filter((link) => link.href).length < socialDefinitions.length) {
+            try {
+                const response = await fetch('contact.html');
+                if (response.ok) {
+                    const contactPage = new DOMParser().parseFromString(await response.text(), 'text/html');
+                    links = socialLinksFrom(contactPage);
+                }
+            } catch (error) {
+                // The current page can still show any social links already available in its markup.
+            }
+        }
+        createSocialBlock(footer, links);
+    };
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addFooterSocials);
+    else addFooterSocials();
+
+    // Some pages create their footer after page scripts load.
+    new MutationObserver(() => addFooterSocials()).observe(document.documentElement, {
+        childList: true,
+        subtree: true
+    });
+})();

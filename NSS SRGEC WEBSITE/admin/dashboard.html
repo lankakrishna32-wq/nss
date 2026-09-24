@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard | SRGEC NSS Admin</title>
+  <title>Dashboard | Hamara Bharat Admin</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/admin.css">
 </head>
@@ -11,19 +11,17 @@
   <div class="admin-layout">
     <aside class="admin-sidebar">
       <a class="brand" href="/index.html">
-        <span class="logo">NSS</span>
+        <img src="/images/Logo.jpeg" alt="Hamara Bharat Logo" class="logo-img">
         <span>
-          <strong>SRGEC NSS</strong>
+          <strong>Hamara Bharat</strong>
           <span>Admin Panel</span>
         </span>
       </a>
       <nav class="admin-nav" data-admin-nav>
         <a href="/admin/dashboard.html">Dashboard</a>
         <a href="/admin/activities.html">Activities</a>
-        <a href="/admin/camps.html">Camps</a>
-        <a href="/admin/members.html">Members</a>
-        <a href="/admin/band-captains.html">Band Captains</a>
-        <a href="/admin/band.html">Band Team</a>
+        <a href="/admin/members.html">Core Team</a>
+        <a href="/admin/volunteers.html">Volunteers</a>
         <a href="/admin/gallery.html">Gallery</a>
         <a href="/admin/settings.html">Settings</a>
       </nav>
@@ -44,54 +42,19 @@
       <div class="card" style="padding: 16px 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
         <div style="display: flex; gap: 12px; align-items: center;">
           <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green);"></span>
-          <span style="font-size: 0.92rem; font-weight: 600; color: var(--text);">Cloud Firestore Live Sync Active</span>
+          <span style="font-size: 0.92rem; font-weight: 600; color: var(--text);">MongoDB Data Sync Active</span>
         </div>
-        <span style="font-size: 0.82rem; color: var(--muted);">Changes automatically sync to the public website in real time</span>
+        <span style="font-size: 0.82rem; color: var(--muted);">Changes sync to the public website when saved</span>
       </div>
 
       <section class="grid cols-3" data-admin-stats></section>
-
-      <!-- Dedicated Band Management Controls -->
-      <section class="section" style="padding: 24px 0 0 0;">
-        <div class="section-head" style="margin-bottom: 16px;">
-          <span class="eyebrow">Ceremonial Band Management</span>
-          <h2 style="font-size: 1.3rem;">Dedicated Band Controls</h2>
-        </div>
-        <div class="grid cols-2">
-          <article class="card card-body" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--orange);">
-            <div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h3 style="font-size: 1.2rem; color: var(--orange); margin: 0;">🎖️ Band Captains</h3>
-                <span class="status-tag active">Leadership</span>
-              </div>
-              <p style="color: var(--muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 16px;">
-                Add, edit, or remove active and alumni Band Captains with tenure dates, leadership bio, and photo portfolios.
-              </p>
-            </div>
-            <a href="/admin/band-captains.html" class="btn orange" style="justify-content: center;">Manage Band Captains &rarr;</a>
-          </article>
-
-          <article class="card card-body" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid #38bdf8;">
-            <div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h3 style="font-size: 1.2rem; color: #38bdf8; margin: 0;">🥁 Band Team Members</h3>
-                <span class="status-tag" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);">Roster</span>
-              </div>
-              <p style="color: var(--muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 16px;">
-                Manage side drum leads, bass drummers, buglers, and ceremonial instrument players with roll numbers and status.
-              </p>
-            </div>
-            <a href="/admin/band.html" class="btn ghost" style="justify-content: center; border-color: rgba(56,189,248,0.5); color: #38bdf8;">Manage Band Team Members &rarr;</a>
-          </article>
-        </div>
-      </section>
 
       <section class="section" style="padding: 24px 0 0 0;">
         <div class="grid cols-2">
           <article class="card card-body">
             <h2 style="font-size: 1.25rem; margin-bottom: 8px;">Content Management System</h2>
             <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.6;">
-              Manage homepage contents, activity records, blood donation camps, student coordinator leadership, and photo gallery.
+              Manage homepage contents, Core Team profiles, activity records, and the photo gallery.
             </p>
           </article>
           <article class="card card-body">
@@ -111,19 +74,9 @@
         <div class="grid cols-4" data-admin-roles></div>
       </section>
 
-      <section class="section" style="padding: 32px 0 0 0;">
-        <div class="section-head" style="margin-bottom: 20px;">
-          <span class="eyebrow">Forms & Inquiries</span>
-          <h2 style="font-size: 1.4rem;">Volunteer & Band Registrations</h2>
-        </div>
-        <div class="table-wrap" data-registration-table></div>
-      </section>
     </main>
   </div>
-  <!-- Firebase App & Firestore SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
-  <script src="/js/firebase-config.js"></script>
+  
   <script src="/js/admin.js"></script>
 </body>
 </html>
