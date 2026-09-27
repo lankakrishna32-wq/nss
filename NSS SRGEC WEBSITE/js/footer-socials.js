@@ -16,7 +16,7 @@
         const footer = document.querySelector('footer');
         if (!footer || footer.querySelector('.footer-social-media')) return;
         const officeHeading = Array.from(footer.querySelectorAll('h1, h2, h3, h4, h5, h6, strong, b'))
-            .find((element) => /hamara bharat office/i.test(element.textContent));
+            .find((element) => /hamara Nation office/i.test(element.textContent));
         if (!officeHeading) return;
 
         let socialLinks = linksFrom(document);

@@ -459,7 +459,7 @@ function makeInput(field, value) {
     return '<label>Category<select class="input" name="category">' +
       '<option value="Health"' + (catVal === "Health" ? " selected" : "") + '>Health & Blood Donation</option>' +
       '<option value="Environment"' + (catVal === "Environment" ? " selected" : "") + '>Environment & Greenery</option>' +
-      '<option value="Cleanliness"' + (catVal === "Cleanliness" ? " selected" : "") + '>Cleanliness & Swachh Bharat</option>' +
+      '<option value="Cleanliness"' + (catVal === "Cleanliness" ? " selected" : "") + '>Cleanliness & Swachh Nation</option>' +
       '<option value="Awareness"' + (catVal === "Awareness" ? " selected" : "") + '>Awareness & Rally</option>' +
       '<option value="Education"' + (catVal === "Education" ? " selected" : "") + '>Education & Outreach</option>' +
       '</select></label>';
@@ -756,7 +756,7 @@ function initSettings(data) {
   if (form.year) form.year.value = (data.home && data.home.year) || "";
   if (form.firstOfficer) form.firstOfficer.value = (data.home && data.home.firstOfficer) || "";
   if (form.facultyCoordinator) form.facultyCoordinator.value = (data.home && data.home.facultyCoordinator) || "DR. V. Naveen Kumar";
-  if (form.Email) form.Email.value = (data.contact && data.contact.Email) || "hamarabharatyuvashakti@gmail.com";
+  if (form.Email) form.Email.value = (data.contact && data.contact.Email) || "hamaraNationyuvashakti@gmail.com";
   if (form.phone) form.phone.value = (data.contact && data.contact.phone) || "+91 9666658751";
   if (form.address) form.address.value = (data.contact && data.contact.address) || "";
 

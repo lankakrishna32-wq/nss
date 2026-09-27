@@ -683,7 +683,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         addVolunteersLink();
     }
 })();
-// Add the Contact-page social links to the footer's Hamara Bharat Office section.
+// Add the Contact-page social links to the footer's Hamara Nation Office section.
 (() => {
     const socialDefinitions = [
         { key: 'whatsapp', label: 'WhatsApp Channel', symbol: '◉' },
@@ -694,7 +694,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const createSocialBlock = (footer, links) => {
         if (!footer || footer.querySelector('.footer-social-media')) return;
         const officeHeading = Array.from(footer.querySelectorAll('h1, h2, h3, h4, h5, h6, strong, b'))
-            .find((element) => /hamara bharat office/i.test(element.textContent));
+            .find((element) => /hamara Nation office/i.test(element.textContent));
         const block = document.createElement('div');
         block.className = 'footer-social-media';
         block.innerHTML = '<p>Follow Us</p><div class="footer-social-media__links"></div>';

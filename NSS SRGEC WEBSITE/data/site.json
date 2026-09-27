@@ -1,7 +1,7 @@
 {
   "version": 7,
   "home": {
-    "established": "Hamara Bharat is a service-oriented Non-Profitable organization built by the Founder, volunteers, and coordinators who share a lifelong commitment to serving society.",
+    "established": "Hamara Nation is a service-oriented Non-Profitable organization built by the Founder, volunteers, and coordinators who share a lifelong commitment to serving society.",
     "Founder": "DR. V. Naveen Kumar",
     "achievements": [
       "Organized blood donation, plantation, awareness, education, and village outreach programs.",
@@ -16,12 +16,12 @@
   },
   "contact": {
     "address": "--------------------",
-    "office": "Hamara Bharat Executive Office",
-    "Email": "hamarabharatyuvashakti@gmail.com",
+    "office": "Hamara Nation Executive Office",
+    "Email": "hamaraNationyuvashakti@gmail.com",
     "phone": "---------",
     "social": [
       { "label": "Whatsapp Channel", "url": "https://whatsapp.com/channel/0029Vb95KtxIt5rsQPw6mZ39" },
-      { "label": "LinkedIn", "url": "https://www.linkedin.com/company/hamara-bharat/" },
+      { "label": "LinkedIn", "url": "https://www.linkedin.com/company/hamara-Nation/" },
       { "label": "Facebook", "url": "https://www.facebook.com/profile.php?id=61593904245280" }
     ]
   },
@@ -37,7 +37,7 @@
     { "name": "Higher Executives", "scope": "Create drafts, update gallery records, and prepare public content." }
   ],
   "announcements": [
-    "Hamara Bharat volunteer registration is open for the ones who are interested.",
+    "Hamara Nation volunteer registration is open for the ones who are interested.",
     "Tree plantation drive scheduled for the first week of September."
   ],
   "events": [
@@ -56,20 +56,20 @@
       "category": "Health",
       "tags": ["Blood Donation", "Health", "Service"],
       "volunteers": 86,
-      "organizers": "Hamara Bharat Unit.",
+      "organizers": "Hamara Nation Unit.",
       "image": "https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1200&q=80"
     },
     {
-      "title": "Swachh Bharat Campus Drive",
-      "description": "Cleanliness awareness campaign and village beautification activity inspired by Swachh Bharat Abhiyan.",
+      "title": "Swachh Nation Campus Drive",
+      "description": "Cleanliness awareness campaign and village beautification activity inspired by Swachh Nation Abhiyan.",
       "date": "2026-06-05",
       "month": "June",
       "year": "2026",
       "location": "Villages",
       "category": "Cleanliness",
-      "tags": ["Swachh Bharat", "Clean and Green"],
+      "tags": ["Swachh Nation", "Clean and Green"],
       "volunteers": 120,
-      "organizers": "Hamara Bharat team.",
+      "organizers": "Hamara Nation team.",
       "image": "https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?auto=format&fit=crop&w=1200&q=80"
     },
     {
@@ -82,7 +82,7 @@
       "category": "Environment",
       "tags": ["Plantation", "Environment"],
       "volunteers": 98,
-      "organizers": "Hamara Bharat Unit and Eco Club.",
+      "organizers": "Hamara Nation Unit and Eco Club.",
       "image": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80"
     },
     {
@@ -95,7 +95,7 @@
       "category": "Awareness",
       "tags": ["Rally", "Awareness"],
       "volunteers": 112,
-      "organizers": "Hamara Bharat team.",
+      "organizers": "Hamara Nation team.",
       "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80"
     },
     {
@@ -108,7 +108,7 @@
       "category": "Education",
       "tags": ["Village Adoption", "Education"],
       "volunteers": 64,
-      "organizers": "Hamara Bharat team.",
+      "organizers": "Hamara Nation team.",
       "image": "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80"
     },
     {
@@ -121,7 +121,7 @@
       "category": "Health",
       "tags": ["Health Camp", "Community"],
       "volunteers": 72,
-      "organizers": "Hamara Bharat team.",
+      "organizers": "Hamara Nation team.",
       "image": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80"
     }
   ],
@@ -129,14 +129,14 @@
   "members": [
     {
       "name": "DR. V. Naveen Kumar",
-      "role": "Hamara Bharat Founder and President",
-      "Email": "hamarabharatyuvashakti@gmail.com",
+      "role": "Hamara Nation Founder and President",
+      "Email": "hamaraNationyuvashakti@gmail.com",
       "phone": "----------",
       "branch": "Faculty",
       "status": "active",
       "achievements": "Guides service initiatives, volunteer development, community programs, and organizational planning.",
       "camps": "Guides volunteer preparation and participation in service initiatives.",
-      "bio": "Provides mentorship and leadership for Hamara Bharat's service-oriented community work.",
+      "bio": "Provides mentorship and leadership for Hamara Nation's service-oriented community work.",
       "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80"
     },
     {
