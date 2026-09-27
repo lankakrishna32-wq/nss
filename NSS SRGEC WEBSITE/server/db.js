@@ -10,7 +10,7 @@ async function connectDB() {
     await client.connect();
     console.log('MongoDB connected successfully');
 
-    db = client.db('nss_srgc');
+    db = client.db(process.env.MONGODB_DATABASE || 'nss_srgc');
 
     return db;
 }

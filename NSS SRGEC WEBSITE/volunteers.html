@@ -73,7 +73,7 @@
         (async function loadApprovedVolunteers() {
             const list = document.getElementById('volunteersList');
             try {
-                const response = await fetch('/api/site-data');
+                const response = await fetch('/api/site');
                 if (!response.ok) throw new Error('Unable to load volunteers');
                 const payload = await response.json();
                 const volunteers = Array.isArray(payload.volunteers)
@@ -170,7 +170,7 @@
 
         (async function loadApprovedVolunteerNames() {
             const list = document.getElementById('volunteersList');
-            const sources = ['/api/site-data', '/api/data', '/api/volunteers', '/api/registrations', 'site.json'];
+            const sources = ['/api/site', '/api/registrations', 'site.json'];
 
             for (const source of sources) {
                 try {

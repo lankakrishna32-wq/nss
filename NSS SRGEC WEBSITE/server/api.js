@@ -1,18 +1,50 @@
 const { ObjectId } = require('mongodb');
 const { getDB } = require('./db');
+const defaultSiteContent = require('../data/site.json');
 
 async function getSiteContent() {
     const db = getDB();
 
-    const document = await db
-        .collection('site_data')
-        .findOne({ _id: 'content' });
+    const [document, approvedRegistrations] = await Promise.all([
+        db.collection('site_data').findOne({ _id: 'content' }),
+        db.collection('registrations')
+            .find({ type: 'NSS Volunteer', status: 'approved' })
+            .project({ 'aadhaarCard.data': 0 })
+            .toArray()
+    ]);
 
-    return document;
+    const content = document || defaultSiteContent;
+    const volunteers = Array.isArray(content.volunteers) ? [...content.volunteers] : [];
+    const knownRegistrationIds = new Set(
+        volunteers.map(volunteer => volunteer && volunteer.registrationId).filter(Boolean).map(String)
+    );
+
+    approvedRegistrations.forEach(registration => {
+        const registrationId = String(registration._id);
+        if (knownRegistrationIds.has(registrationId)) return;
+
+        volunteers.push({
+            registrationId,
+            name: registration.name || registration.fullName || '',
+            phone: registration.phone || '',
+            reason: registration.reason || '',
+            registeredAt: registration.createdAt,
+            approvedAt: registration.reviewedAt
+        });
+        knownRegistrationIds.add(registrationId);
+    });
+
+    return {
+        ...content,
+        volunteers,
+        volunteerCount: volunteers.length
+    };
 }
 
 async function saveSiteContent(data) {
     const db = getDB();
+    const content = { ...data };
+    delete content.volunteerCount;
 
     await db
         .collection('site_data')
@@ -20,7 +52,7 @@ async function saveSiteContent(data) {
             { _id: 'content' },
             {
                 _id: 'content',
-                ...data
+                ...content
             },
             { upsert: true }
         );
@@ -105,7 +137,6 @@ async function reviewRegistration(id, status) {
         reviewedAt
     };
 }
-
 
 async function getRegistrations() {
     const db = getDB();
